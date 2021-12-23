@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 03:25:35 by chanhpar          #+#    #+#             */
-/*   Updated: 2021/12/23 22:21:16 by chanhpar         ###   ########.fr       */
+/*   Updated: 2021/12/24 01:18:45 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,17 @@
 
 char	*get_next_line(int fd)
 {
-	static size_t	i;
-	static size_t	buff;
-	static char		*c;
-	ssize_t			rd;
+	static char	**str;
+	char		*rst;
+	ssize_t		cnt;
+	ssize_t		len;
 
-	buff = BUFFER_SIZE;
 	if (fd < 0)
 		return (NULL);
-	c = (char *)malloc(sizeof(char) * buff);
-	rd = read(fd, &c[i], 1);
-	write(1, &c[i], 1);
-	write(1, "\n", 1);
-	i++;
-	if (rd < 0)
-		return (NULL);
-	return (c);
+	rst = (char **)malloc(sizeof(char *));
+	cnt = read(fd, *rst, BUFFER_SIZE);
+	len = 0;
+	while ((*rst)[len] != '\n' && (*rst)[len] != '\0')
+		len++;
+	return (rst);
 }
