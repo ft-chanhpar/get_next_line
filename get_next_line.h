@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 03:26:09 by chanhpar          #+#    #+#             */
-/*   Updated: 2021/12/24 16:36:04 by chanhpar         ###   ########.fr       */
+/*   Updated: 2021/12/25 03:04:39 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 
 size_t	ft_strlen(const char *str);
 void	*ft_memmove(void *dest, const void *src, size_t n);
+char	*ft_strdup(const char *src);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strjoin(char const *s1, char const *s2);
 
