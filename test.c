@@ -1,31 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/21 03:25:35 by chanhpar          #+#    #+#             */
-/*   Updated: 2021/12/24 16:47:32 by chanhpar         ###   ########.fr       */
+/*   Created: 2021/12/24 16:36:23 by chanhpar          #+#    #+#             */
+/*   Updated: 2021/12/24 16:39:45 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include <unistd.h>
+#include <stdlib.h>
 #include <fcntl.h>
+#include <stdio.h>
 
 int	main(void)
 {
-	static char	*str;
-	int	i = 0;
-	int	fd;
+	int	fd = open("sample", O_RDONLY);
+	char	str[10];
 
-	fd = open("sample", O_RDONLY);
-	while (i < 2)
-	{
-		str = get_next_line(fd);
-		write(1, str, ft_strlen(str));
-		i++;
-	}
-	free(str);	
+	read(fd, str, 5);
+	printf("%s", str);
 	return (0);
 }

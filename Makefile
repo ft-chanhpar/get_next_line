@@ -6,11 +6,11 @@
 #    By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/27 02:20:40 by chanhpar          #+#    #+#              #
-#    Updated: 2021/12/23 22:20:50 by chanhpar         ###   ########.fr        #
+#    Updated: 2021/12/24 16:56:22 by chanhpar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRC	= get_next_line.c get_next_line_utils.c
+SRC	= get_next_line.c get_next_line_utils.c main.c
 
 BSRC	= 
 BSRCDIR	=
@@ -27,14 +27,14 @@ CFLAGS	= -Wall -Wextra -Werror
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
-	$(CC) $(CFLAGS) main.c $^
+$(NAME): $(SRC)
+	$(CC) -g $(CFLAGS) $^ -D BUFFER_SIZE=5
 
 bonus:
 	@make --no-print-directory OBJ="$(OBJ) $(BOBJ)" all
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $(<:.c=.o) -D BUFFER_SIZE=42
+# %.o: %.c
+#     $(CC) -g $(CFLAGS) -c $< -o $(<:.c=.o) -D BUFFER_SIZE=42
 
 clean:
 	rm -f $(OBJ) $(BOBJ)
