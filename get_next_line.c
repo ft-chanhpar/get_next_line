@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 03:25:35 by chanhpar          #+#    #+#             */
-/*   Updated: 2021/12/25 17:24:32 by chanhpar         ###   ########.fr       */
+/*   Updated: 2021/12/25 18:40:55 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ static int	ft_check(char *str, char **rst, ssize_t *cnt)
 	{
 		len++;
 		ft_join_swap(str, rst, len);
-		ft_memmove(str, str + len, *cnt - len + 1);
 		*cnt -= len;
+		ft_memmove(str, str + len, *cnt + 1);
 		return (1);
 	}
 	else
