@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 03:25:35 by chanhpar          #+#    #+#             */
-/*   Updated: 2021/12/25 17:08:40 by chanhpar         ###   ########.fr       */
+/*   Updated: 2021/12/25 17:17:00 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void	ft_join_swap(char *str, char **rst, ssize_t len)
 	char	*temp;
 	char	*join;
 
-	temp = ft_substr(str, 0, len);
+	temp = ft_substr(str, len);
 	join = ft_strjoin(*rst, temp);
 	free(*rst);
 	*rst = join;
