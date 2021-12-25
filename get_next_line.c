@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 03:25:35 by chanhpar          #+#    #+#             */
-/*   Updated: 2021/12/26 00:27:33 by chanhpar         ###   ########.fr       */
+/*   Updated: 2021/12/26 01:28:27 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,9 @@ static int	ft_check(char *str, char **rst, ssize_t *cnt)
 
 char	*get_next_line(int fd)
 {
-	static char		str[BUFFER_SIZE + 1];
 	char			*rst;
 	static ssize_t	cnt;
+	static char		str[BUFFER_SIZE + 1];
 
 	if (fd < 0)
 		return (NULL);
