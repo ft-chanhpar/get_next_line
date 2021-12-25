@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 03:25:35 by chanhpar          #+#    #+#             */
-/*   Updated: 2021/12/25 03:48:36 by chanhpar         ###   ########.fr       */
+/*   Updated: 2021/12/25 09:13:49 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 char	*get_next_line(int fd)
 {
-	static char	str[BUFFER_SIZE];
+	static char	str[BUFFER_SIZE + 1];
 	char		*temp;
 	char		*join;
 	char		*rst;
@@ -36,8 +36,9 @@ char	*get_next_line(int fd)
 		len = 0;
 		while (str[len] != '\n' && len < cnt)
 			len++;
-		if (len++ != cnt)
+		if (len != cnt)
 		{
+			len++;
 			temp = ft_substr(str, 0, len);
 			join = ft_strjoin(rst, temp);
 			free(rst);
@@ -45,7 +46,10 @@ char	*get_next_line(int fd)
 			free(temp);
 			temp = NULL;
 			cnt -= len;
-			ft_memmove(str, str + len, cnt);
+			if (cnt != 0)
+				ft_memmove(str, str + len, cnt);
+			else
+				str[0] = '\0';
 			break ;
 		}
 		else
