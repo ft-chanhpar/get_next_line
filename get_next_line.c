@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 03:25:35 by chanhpar          #+#    #+#             */
-/*   Updated: 2021/12/25 09:52:16 by chanhpar         ###   ########.fr       */
+/*   Updated: 2021/12/25 10:10:52 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,12 +36,34 @@ static char	*ft_err_eof(char **rst, ssize_t cnt)
 		return (*rst);
 }
 
+static int	ft_check(char *str, char **rst, ssize_t *cnt)
+{
+	ssize_t	len;
+
+	len = 0;
+	while (str[len] != '\n' && len < *cnt)
+		len++;
+	if (len != *cnt)
+	{
+		len++;
+		ft_join_swap(str, rst, len);
+		ft_memmove(str, str + len, *cnt - len + 1);
+		*cnt -= len;
+		return (1);
+	}
+	else
+	{
+		ft_join_swap(str, rst, len);
+		ft_memmove(str, str + len, *cnt - len + 1);
+		return (0);
+	}
+}
+
 char	*get_next_line(int fd)
 {
 	static char		str[BUFFER_SIZE + 1];
 	char			*rst;
 	static ssize_t	cnt;
-	ssize_t			len;
 
 	if (fd < 0)
 		return (NULL);
@@ -55,22 +77,8 @@ char	*get_next_line(int fd)
 		}
 		if (cnt <= 0)
 			return (ft_err_eof(&rst, cnt));
-		len = 0;
-		while (str[len] != '\n' && len < cnt)
-			len++;
-		if (len != cnt)
-		{
-			len++;
-			ft_join_swap(str, &rst, len);
-			ft_memmove(str, str + len, cnt - len + 1);
-			cnt -= len;
+		if (ft_check(str, &rst, &cnt))
 			break ;
-		}
-		else
-		{
-			ft_join_swap(str, &rst, len);
-			ft_memmove(str, str + len, cnt - len + 1);
-		}
 	}
 	return (rst);
 }

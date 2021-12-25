@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 03:25:35 by chanhpar          #+#    #+#             */
-/*   Updated: 2021/12/25 09:52:38 by chanhpar         ###   ########.fr       */
+/*   Updated: 2021/12/25 10:12:05 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,17 @@
 int	main(void)
 {
 	static char	*str;
-	int	i = 0;
-	int	fd;
+	int			i;
+	int			fd;
 
+	i = 0;
 	fd = open("sample", O_RDONLY);
-	while (i < 3)
+	while (i < 22)
 	{
 		str = get_next_line(fd);
 		write(1, str, ft_strlen(str));
 		i++;
 	}
-	free(str);	
+	free(str);
 	return (0);
 }
