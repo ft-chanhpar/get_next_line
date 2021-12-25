@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 03:29:02 by chanhpar          #+#    #+#             */
-/*   Updated: 2021/12/25 02:34:45 by chanhpar         ###   ########.fr       */
+/*   Updated: 2021/12/25 09:23:39 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,24 +48,6 @@ void	*ft_memmove(void *dest, const void *src, size_t n)
 		}
 	}
 	return (dest);
-}
-
-char	*ft_strdup(const char *src)
-{
-	size_t		i;
-	char		*rst;
-
-	rst = (char *)malloc(sizeof(char) * (ft_strlen(src) + 1));
-	if (!rst)
-		return (NULL);
-	i = 0;
-	while (src[i] != '\0')
-	{
-		rst[i] = src[i];
-		i++;
-	}
-	rst[i] = '\0';
-	return (rst);
 }
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)

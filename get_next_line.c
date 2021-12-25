@@ -6,25 +6,35 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 03:25:35 by chanhpar          #+#    #+#             */
-/*   Updated: 2021/12/25 09:13:49 by chanhpar         ###   ########.fr       */
+/*   Updated: 2021/12/25 09:26:03 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+static void	ft_join_swap(char *str, char **rst, ssize_t len)
+{
+	char	*temp;
+	char	*join;
+
+	temp = ft_substr(str, 0, len);
+	join = ft_strjoin(*rst, temp);
+	free(*rst);
+	*rst = join;
+	free(temp);
+	temp = NULL;
+}
+
 char	*get_next_line(int fd)
 {
-	static char	str[BUFFER_SIZE + 1];
-	char		*temp;
-	char		*join;
-	char		*rst;
-	static ssize_t		cnt;
-	ssize_t		len;
+	static char		str[BUFFER_SIZE + 1];
+	char			*rst;
+	static ssize_t	cnt;
+	ssize_t			len;
 
 	if (fd < 0)
 		return (NULL);
-	temp = NULL;
-	rst = ft_strdup("");
+	rst = ft_substr("", 0, 0);
 	while (1)
 	{
 		if (str[0] == '\0')
@@ -39,27 +49,14 @@ char	*get_next_line(int fd)
 		if (len != cnt)
 		{
 			len++;
-			temp = ft_substr(str, 0, len);
-			join = ft_strjoin(rst, temp);
-			free(rst);
-			rst = join;
-			free(temp);
-			temp = NULL;
+			ft_join_swap(str, &rst, len);
 			cnt -= len;
-			if (cnt != 0)
-				ft_memmove(str, str + len, cnt);
-			else
-				str[0] = '\0';
+			ft_memmove(str, str + len, cnt + 1);
 			break ;
 		}
 		else
 		{
-			temp = ft_substr(str, 0, len);
-			join = ft_strjoin(rst, temp);
-			free(rst);
-			rst = join;
-			free(temp);
-			temp = NULL;
+			ft_join_swap(str, &rst, len);
 			str[0] = '\0';
 		}
 	}
