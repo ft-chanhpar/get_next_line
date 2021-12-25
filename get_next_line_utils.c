@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 03:29:02 by chanhpar          #+#    #+#             */
-/*   Updated: 2021/12/25 17:34:03 by chanhpar         ###   ########.fr       */
+/*   Updated: 2021/12/26 00:37:55 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,31 +52,26 @@ void	*ft_memmove(void *dest, const void *src, size_t n)
 
 char	*ft_substr(char const *s, size_t len)
 {
-	size_t	s_len;
-	size_t	d;
 	char	*rst;
 
-	s_len = ft_strlen(s);
-	if (len > s_len)
-		d = s_len;
-	else
-		d = len;
-	rst = (char *)malloc(sizeof(char) * (1 + d));
+	rst = (char *)malloc(sizeof(char) * (len + 1));
 	if (!rst)
 		return (NULL);
-	rst = ft_memmove(rst, s, d);
-	rst[d] = '\0';
+	rst = ft_memmove(rst, s, len);
+	rst[len] = '\0';
 	return (rst);
 }
 
 char	*ft_strjoin(char const *s1, char const *s2, size_t len)
 {
 	size_t	len1;
+	size_t	len2;
 	char	*rst;
 	char	*tmp;
 
-	if (len > ft_strlen(s2))
-		len = ft_strlen(s2);
+	len2 = ft_strlen(s2);
+	if (len > len2)
+		len = len2;
 	if (s1 == NULL)
 		return (ft_substr(s2, len));
 	len1 = ft_strlen(s1);

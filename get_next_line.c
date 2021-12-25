@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 03:25:35 by chanhpar          #+#    #+#             */
-/*   Updated: 2021/12/25 18:40:55 by chanhpar         ###   ########.fr       */
+/*   Updated: 2021/12/26 00:27:33 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,14 @@ static int	ft_check(char *str, char **rst, ssize_t *cnt)
 	ssize_t	len;
 
 	len = 0;
-	while (str[len] != '\n' && len < *cnt)
+	while (len < *cnt && str[len] != '\n')
 		len++;
 	if (len != *cnt)
 	{
 		len++;
 		ft_join_swap(str, rst, len);
 		*cnt -= len;
-		ft_memmove(str, str + len, *cnt + 1);
+		ft_memmove(str, str + len, *cnt);
 		return (1);
 	}
 	else
