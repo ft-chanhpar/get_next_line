@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 03:25:35 by chanhpar          #+#    #+#             */
-/*   Updated: 2021/12/25 09:35:34 by chanhpar         ###   ########.fr       */
+/*   Updated: 2021/12/25 09:52:16 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,10 @@ char	*get_next_line(int fd)
 	while (1)
 	{
 		if (str[0] == '\0')
+		{
 			cnt = read(fd, str, BUFFER_SIZE);
+			str[cnt] = '\0';
+		}
 		if (cnt <= 0)
 			return (ft_err_eof(&rst, cnt));
 		len = 0;
@@ -59,14 +62,14 @@ char	*get_next_line(int fd)
 		{
 			len++;
 			ft_join_swap(str, &rst, len);
+			ft_memmove(str, str + len, cnt - len + 1);
 			cnt -= len;
-			ft_memmove(str, str + len, cnt + 1);
 			break ;
 		}
 		else
 		{
 			ft_join_swap(str, &rst, len);
-			str[0] = '\0';
+			ft_memmove(str, str + len, cnt - len + 1);
 		}
 	}
 	return (rst);
