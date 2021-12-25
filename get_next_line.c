@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 03:25:35 by chanhpar          #+#    #+#             */
-/*   Updated: 2021/12/25 10:10:52 by chanhpar         ###   ########.fr       */
+/*   Updated: 2021/12/25 11:15:41 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ static void	ft_join_swap(char *str, char **rst, ssize_t len)
 
 	temp = ft_substr(str, 0, len);
 	join = ft_strjoin(*rst, temp);
-	free(*rst);
+	if (*rst != NULL)
+		free(*rst);
 	*rst = join;
 	free(temp);
 	temp = NULL;
@@ -29,7 +30,8 @@ static char	*ft_err_eof(char **rst, ssize_t cnt)
 {
 	if (cnt < 0)
 	{
-		free(*rst);
+		if (*rst != NULL)
+			free(*rst);
 		return (NULL);
 	}
 	else
@@ -67,7 +69,7 @@ char	*get_next_line(int fd)
 
 	if (fd < 0)
 		return (NULL);
-	rst = ft_substr("", 0, 0);
+	rst = NULL;
 	while (1)
 	{
 		if (str[0] == '\0')

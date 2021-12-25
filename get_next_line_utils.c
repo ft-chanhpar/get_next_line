@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 03:29:02 by chanhpar          #+#    #+#             */
-/*   Updated: 2021/12/25 09:23:39 by chanhpar         ###   ########.fr       */
+/*   Updated: 2021/12/25 11:14:24 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	char	*rst;
 	char	*tmp;
 
+	if (s1 == NULL)
+		return (ft_substr(s2, 0, ft_strlen(s2)));
 	len1 = ft_strlen(s1);
 	len2 = ft_strlen(s2);
 	rst = (char *)malloc(sizeof(char) * (len1 + len2 + 1));
