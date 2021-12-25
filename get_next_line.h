@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 03:26:09 by chanhpar          #+#    #+#             */
-/*   Updated: 2021/12/25 03:04:39 by chanhpar         ###   ########.fr       */
+/*   Updated: 2021/12/25 17:09:04 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,12 @@
 
 # include <unistd.h>
 # include <stdlib.h>
+
+typedef struct s_static
+{
+	char	str[BUFFER_SIZE + 1];
+	ssize_t	cnt;
+}	t_static;
 
 size_t	ft_strlen(const char *str);
 void	*ft_memmove(void *dest, const void *src, size_t n);
