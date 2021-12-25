@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 03:29:02 by chanhpar          #+#    #+#             */
-/*   Updated: 2021/12/25 17:16:28 by chanhpar         ###   ########.fr       */
+/*   Updated: 2021/12/25 17:34:03 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,24 +69,24 @@ char	*ft_substr(char const *s, size_t len)
 	return (rst);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char const *s1, char const *s2, size_t len)
 {
 	size_t	len1;
-	size_t	len2;
 	char	*rst;
 	char	*tmp;
 
+	if (len > ft_strlen(s2))
+		len = ft_strlen(s2);
 	if (s1 == NULL)
-		return (ft_substr(s2, ft_strlen(s2)));
+		return (ft_substr(s2, len));
 	len1 = ft_strlen(s1);
-	len2 = ft_strlen(s2);
-	rst = (char *)malloc(sizeof(char) * (len1 + len2 + 1));
+	rst = (char *)malloc(sizeof(char) * (len1 + len + 1));
 	if (!rst)
 		return (NULL);
 	tmp = rst;
 	tmp = ft_memmove(tmp, s1, len1);
 	tmp += len1;
-	tmp = ft_memmove(tmp, s2, len2);
-	tmp[len2] = '\0';
+	tmp = ft_memmove(tmp, s2, len);
+	tmp[len] = '\0';
 	return (rst);
 }
