@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 03:25:35 by chanhpar          #+#    #+#             */
-/*   Updated: 2021/12/25 09:26:03 by chanhpar         ###   ########.fr       */
+/*   Updated: 2021/12/25 09:35:34 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,17 @@ static void	ft_join_swap(char *str, char **rst, ssize_t len)
 	temp = NULL;
 }
 
+static char	*ft_err_eof(char **rst, ssize_t cnt)
+{
+	if (cnt < 0)
+	{
+		free(*rst);
+		return (NULL);
+	}
+	else
+		return (*rst);
+}
+
 char	*get_next_line(int fd)
 {
 	static char		str[BUFFER_SIZE + 1];
@@ -39,10 +50,8 @@ char	*get_next_line(int fd)
 	{
 		if (str[0] == '\0')
 			cnt = read(fd, str, BUFFER_SIZE);
-		if (cnt < 0)
-			return (NULL);
-		if (cnt == 0)
-			return (rst);
+		if (cnt <= 0)
+			return (ft_err_eof(&rst, cnt));
 		len = 0;
 		while (str[len] != '\n' && len < cnt)
 			len++;

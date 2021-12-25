@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 03:25:35 by chanhpar          #+#    #+#             */
-/*   Updated: 2021/12/25 09:21:10 by chanhpar         ###   ########.fr       */
+/*   Updated: 2021/12/25 09:37:28 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	main(void)
 	int	fd;
 
 	fd = open("sample", O_RDONLY);
-	while (i < 4)
+	while (i < 20)
 	{
 		str = get_next_line(fd);
 		write(1, str, ft_strlen(str));
