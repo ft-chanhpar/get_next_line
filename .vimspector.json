@@ -1,0 +1,20 @@
+{
+  "configurations": {
+  "Launch": {
+    "adapter": "vscode-cpptools",
+    "configuration": {
+      "type": "gdb",
+      "request": "launch",
+      "externalConsole": false,
+      "logging": {
+        "engineLogging": true
+      },
+      "stopOnEntry": true,
+      "stopAtEntry": true,
+      "debugOptions": [],
+      "cwd": "${PWD}",
+      "program": "${PWD}/a.out"
+    }
+  }
+  }
+}

@@ -6,7 +6,7 @@
 #    By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/10/27 02:20:40 by chanhpar          #+#    #+#              #
-#    Updated: 2021/12/26 01:34:39 by chanhpar         ###   ########.fr        #
+#    Updated: 2021/12/26 11:46:52 by chanhpar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ CFLAGS	= -Wall -Wextra -Werror
 all: $(NAME)
 
 $(NAME): $(SRC)
-	$(CC) -g $(CFLAGS) $^ -D BUFFER_SIZE=1
+	$(CC) -g $(CFLAGS) $^ -D BUFFER_SIZE=10
 
 bonus:
 	@make --no-print-directory OBJ="$(OBJ) $(BOBJ)" all
