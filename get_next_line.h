@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 03:26:09 by chanhpar          #+#    #+#             */
-/*   Updated: 2021/12/25 17:34:12 by chanhpar         ###   ########.fr       */
+/*   Updated: 2021/12/28 03:01:03 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,12 @@
 # include <unistd.h>
 # include <stdlib.h>
 
-typedef struct s_static
+typedef struct s_file
 {
 	char	str[BUFFER_SIZE + 1];
 	ssize_t	cnt;
-}	t_static;
+	int		is_end;
+}	t_file;
 
 size_t	ft_strlen(const char *str);
 void	*ft_memmove(void *dest, const void *src, size_t n);

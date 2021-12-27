@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 03:25:35 by chanhpar          #+#    #+#             */
-/*   Updated: 2021/12/26 01:28:27 by chanhpar         ###   ########.fr       */
+/*   Updated: 2021/12/28 03:06:11 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,19 +57,22 @@ static int	ft_check(char *str, char **rst, ssize_t *cnt)
 char	*get_next_line(int fd)
 {
 	char			*rst;
-	static ssize_t	cnt;
-	static char		str[BUFFER_SIZE + 1];
+	static t_file	file;
 
 	if (fd < 0)
 		return (NULL);
 	rst = NULL;
 	while (1)
 	{
-		if (cnt == 0)
-			cnt = read(fd, str, BUFFER_SIZE);
-		if (cnt <= 0)
-			return (ft_err_eof(&rst, cnt));
-		if (ft_check(str, &rst, &cnt))
+		if (file.cnt == 0 && file.is_end == 0)
+		{
+			file.cnt = read(fd, file.str, BUFFER_SIZE);
+			if (file.cnt < BUFFER_SIZE)
+				file.is_end = 1;
+		}
+		if (file.cnt <= 0)
+			return (ft_err_eof(&rst, file.cnt));
+		if (ft_check(file.str, &rst, &(file.cnt)))
 			break ;
 	}
 	return (rst);
