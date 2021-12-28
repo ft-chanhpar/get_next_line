@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 03:25:35 by chanhpar          #+#    #+#             */
-/*   Updated: 2021/12/28 03:06:11 by chanhpar         ###   ########.fr       */
+/*   Updated: 2021/12/29 01:52:44 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,25 +31,27 @@ static void	ft_join_swap(char *str, char **rst, ssize_t len)
 	*rst = join;
 }
 
-static int	ft_check(char *str, char **rst, ssize_t *cnt)
+static int	ft_check(char **rst, t_file *file)
 {
 	ssize_t	len;
+	char	*str;
 
+	str = file->str;
 	len = 0;
-	while (len < *cnt && str[len] != '\n')
+	while (len < file->cnt && str[len] != '\n')
 		len++;
-	if (len != *cnt)
+	if (len != file->cnt)
 	{
 		len++;
 		ft_join_swap(str, rst, len);
-		*cnt -= len;
-		ft_memmove(str, str + len, *cnt);
+		file->cnt -= len;
+		ft_memmove(str, str + len, file->cnt);
 		return (1);
 	}
 	else
 	{
 		ft_join_swap(str, rst, len);
-		*cnt = 0;
+		file->cnt = 0;
 		return (0);
 	}
 }
@@ -72,7 +74,7 @@ char	*get_next_line(int fd)
 		}
 		if (file.cnt <= 0)
 			return (ft_err_eof(&rst, file.cnt));
-		if (ft_check(file.str, &rst, &(file.cnt)))
+		if (ft_check(&rst, &file))
 			break ;
 	}
 	return (rst);
