@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 03:25:35 by chanhpar          #+#    #+#             */
-/*   Updated: 2022/01/03 12:54:17 by chanhpar         ###   ########.fr       */
+/*   Updated: 2022/01/03 15:07:08 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	main(void)
 	n = 3;
 	file = "sample";
 	i = 0;
-	fd = open("file", O_RDONLY);
+	fd = open(file, O_RDONLY);
 	while (i < n)
 	{
 		str = get_next_line(fd);
