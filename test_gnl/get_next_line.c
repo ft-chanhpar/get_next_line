@@ -5,53 +5,69 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/03/21 17:31:10 by chanhpar          #+#    #+#             */
-/*   Updated: 2022/03/22 02:53:07 by chanhpar         ###   ########.fr       */
+/*   Created: 2022/03/22 14:05:43 by chanhpar          #+#    #+#             */
+/*   Updated: 2022/03/22 14:41:53 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*parse_str(char *ret, char *buff)
+char	*err_or_eof(char **rst, ssize_t count)
 {
-	size_t	find_newline;
-	size_t	offset;
-	size_t	idx;
-
-	find_newline = ft_strchr(buff, '\n', ft_strlen(buff));
-	offset = find_newline;
-	if (!find_newline)
-		offset = ft_strlen(buff);
-	ret = ft_strjoin_free(ret, buff, offset);
-	idx = 0;
-	while (buff[idx + offset])
+	if (count < 0)
 	{
-		buff[idx] = buff[idx + offset];
-		idx++;
+		free(*rst);
+		*rst = NULL;
 	}
-	buff[idx] = '\0';
-	return (ret);
+	return (*rst);
+}
+
+void	ft_join_free(char **rst, char *buff, ssize_t len)
+{
+	char	*join;
+
+	join = ft_strjoin(*rst, buff, len);
+	free(*rst);
+	*rst = join;
+}
+
+int	find_newline(char **rst, t_file *file)
+{
+	ssize_t	len;
+	int		flag;
+
+	len = 0;
+	while (len < file->count && (file->buff)[len] != '\n')
+		len++;
+	flag = (len != file->count);
+	if (flag)
+		len++;
+	ft_join_free(rst, file->buff, len);
+	file->count -= len;
+	ft_memmove(file->buff, (file->buff) + len, file->count);
+	return (flag);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	buff[BUFFER_SIZE + 1];
-	char		*ret;
-	ssize_t		read_return;
+	static t_file	file;
+	char			*rst;
 
-	if (BUFFER_SIZE < 1 || fd < 0)
+	if (fd < 0 || BUFFER_SIZE < 1)
 		return (NULL);
-	ret = NULL;
-	while (!ft_strchr(buff, '\n', ft_strlen(buff)))
+	rst = NULL;
+	while (1)
 	{
-		ret = ft_strjoin_free(ret, buff, ft_strlen(buff));
-		read_return = read(fd, buff, BUFFER_SIZE);
-		if (read_return < 0)
-			return (NULL);
-		buff[read_return] = '\0';
-		if (read_return < BUFFER_SIZE)
+		if (file.count == 0 && file.is_end == 0)
+		{
+			file.count = read(fd, file.buff, BUFFER_SIZE);
+			if (file.count < BUFFER_SIZE)
+				file.is_end = 1;
+		}
+		if (file.count <= 0)
+			return (err_or_eof(&rst, file.count));
+		if (find_newline(&rst, &file))
 			break ;
 	}
-	ret = parse_str(ret, buff);
-	return (ret);
+	return (rst);
 }
