@@ -6,12 +6,12 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/21 03:26:09 by chanhpar          #+#    #+#             */
-/*   Updated: 2022/01/07 02:27:25 by chanhpar         ###   ########.fr       */
+/*   Updated: 2022/04/04 15:08:38 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
 # include <unistd.h>
 # include <stdlib.h>
