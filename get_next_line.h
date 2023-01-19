@@ -5,33 +5,29 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/21 03:26:09 by chanhpar          #+#    #+#             */
-/*   Updated: 2022/01/03 15:15:19 by chanhpar         ###   ########.fr       */
+/*   Created: 2023/01/19 14:27:50 by chanhpar          #+#    #+#             */
+/*   Updated: 2023/01/19 16:05:30 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-# include <unistd.h>
-# include <stdlib.h>
-
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1
+#  define BUFFER_SIZE 1024
 # endif
 
-typedef struct s_file
+typedef enum e_state
 {
-	char	str[BUFFER_SIZE + 1];
-	ssize_t	cnt;
-	int		is_end;
-}	t_file;
+	EMPTY,
+	VALID
+}	t_state;
 
-size_t	ft_strlen(const char *str);
-void	*ft_memmove(void *dest, const void *src, size_t n);
-char	*ft_substr(char const *s, size_t len);
-char	*ft_strjoin(char const *s1, char const *s2, size_t len);
+typedef struct s_node
+{
+	struct s_node	*next;
+	int				fd;
+	t_state			state;
+}	t_node;
 
-char	*get_next_line(int fd);
-
-#endif
+#endif /* GET_NEXT_LINE_H */
