@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:28:27 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/02/20 00:49:14 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/02/20 01:00:13 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,15 @@ static t_node	**append_data(t_node **node, char *buffer, ssize_t read_len)
 
 static char	*parse_line(t_node *node)
 {
+	char	*string;
+
+	string = malloc(sizeof(char) * (node->newline_pos[node->newline_idx] + 1));
+	if (string == NULL)
+		return (NULL);
 	return (node->data);
 }
 
-static char	*line(t_node **node)
+static char	*process(t_node **node)
 {
 	ssize_t	read_len;
 	char	buffer[BUFFER_SIZE];
@@ -41,13 +46,13 @@ static char	*line(t_node **node)
 		*node = tmp;
 		return (NULL);
 	}
-	return (line(append_data(node, buffer, read_len)));
+	return (process(append_data(node, buffer, read_len)));
 }
 
 static char	*gnl(t_node *node, int fd)
 {
 	if (node->fd == fd)
-		return (line(&node->next, fd));
+		return (process(&node->next, fd));
 	if (node->next)
 		return (gnl(node->next, fd));
 	node->next = malloc(sizeof(t_node));
