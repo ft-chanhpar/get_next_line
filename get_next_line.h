@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:27:50 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/02/20 00:55:11 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/02/20 22:39:30 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@
 typedef enum e_state
 {
 	EMPTY,
-	VALID
+	VALID,
+	HAS_LINE
 }	t_state;
 
 typedef struct s_node
@@ -31,11 +32,12 @@ typedef struct s_node
 	int				fd;
 	t_state			state;
 	char			*data;
+	size_t			begin;
+	size_t			end;
 	size_t			cap;
-	size_t			len;
-    size_t			newline_pos[BUFFER_SIZE];
-    size_t			newline_idx;
-    size_t			newline_count;
+	size_t			newline_pos[BUFFER_SIZE];
+	size_t			newline_idx;
+	size_t			newline_count;
 }	t_node;
 
 #endif /* GET_NEXT_LINE_H */
