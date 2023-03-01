@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:28:27 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/02/23 18:00:12 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/01 15:28:33 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ static char	*parse_line(t_node *node)
 static char	*process(t_node **node)
 {
 	char	buffer[BUFFER_SIZE];
+	char	*new_string;
 	t_node	*tmp;
 
 	if ((*node)->newline_count != 0) // XXX
@@ -65,33 +66,39 @@ static char	*process(t_node **node)
 	}
 	if ((*node)->read_len < BUFFER_SIZE)
 		(*node)->state = FILE_END; // XXX
-	if ((*node)->saved_string == NULL || (*node)->cap - (*node)->end < (*node)->read_len)
+	if ((*node)->state == EMPTY || (*node)->cap - (*node)->end < (*node)->read_len)
 	{
-		// XXX
+		new_string = malloc(sizeof(char) * ((*node)->cap + (*node)->read_len + 1));
+		if (new_string == NULL)
+			return (NULL); // XXX
+		ft_memcpy_recur(new_string, node->saved_string, (*node)->end - (*node)->begin, 0);
+		ft_memcpy_recur(new_string + (*node)->end - (*node)->begin, node->saved_string, (*node)->read_len, 0);
+		new_string[(*node)->end - (*node)->begin + (*node)->read_len + 1] = '\0';
 	}
 	if (append_data(node, buffer))
 		return (process(node));
 	return (NULL);
 }
 
-static char	*gnl(t_node *node, int fd)
+static char	*gnl(t_node **node, int fd)
 {
-	if (node->fd == fd)
-		return (process(&node->next));
-	if (node->next != NULL)
-		return (gnl(node->next, fd));
-	node->next = malloc(sizeof(t_node));
-	if (node->next == NULL)
-		return (NULL);
-	node->next->fd = fd;
-	node->next->state = EMPTY;
-	node->next->saved_string = NULL;
-	/* node->next->begin = 0; */
-	node->next->end = 0;
-	node->next->cap = 0;
-	node->next->newline_idx = 0;
-	node->next->newline_count = 0;
-	return (gnl(node->next, fd));
+	if (*node != NULL)
+	{
+		if ((*node)->fd == fd)
+			return (process(node));
+		else
+			return (gnl(&node->next, fd));
+	}
+	else
+	{
+		*node = malloc(sizeof(t_node));
+		if (*node == NULL)
+			return (NULL);
+		(*node)->fd = fd;
+		(*node)->state = EMPTY;
+		(*node)->next = NULL;
+		return (gnl(node, fd));
+	}
 }
 
 char	*get_next_line(int fd)
@@ -100,5 +107,5 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	return (gnl(&head, fd));
+	return (gnl(&head->next, fd));
 }
