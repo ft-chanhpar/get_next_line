@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:27:50 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/02/23 17:37:17 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/03 18:06:05 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #  define BUFFER_SIZE 1024
 # endif
 
-# include <stddef.h>
+# include <sys/types.h>
 
 typedef enum e_state
 {
