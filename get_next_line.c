@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:28:27 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/03 18:08:11 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/03 18:18:20 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static char	*process(t_node **node)
 	char	*new_string;
 	t_node	*tmp;
 
-	if ((*node)->newline_count != 0) // XXX
+	if ((*node)->state != EMPTY) // XXX
 		return (parse_line(*node));
 	(*node)->read_len = read((*node)->fd, buffer, BUFFER_SIZE);
 	if ((*node)->read_len < 0)
