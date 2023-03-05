@@ -50,7 +50,7 @@ static char	*parse_line(t_node **node)
 	if (string == NULL)
 		return (NULL);
 	*ft_memcpy_recur(string, (*node)->saved_string + (*node)->begin, len) = '\0';
-	(*node)->begin = (*node)->lf_pos[(*node)->lf_idx] + 1;
+	(*node)->begin = (*node)->lf_pos[(*node)->lf_idx] + 1; // XXX FILE_END
 	++(*node)->lf_idx;
 	if ((*node)->lf_idx == (*node)->lf_count)
 	{
