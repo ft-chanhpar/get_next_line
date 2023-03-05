@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:27:50 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/03 18:18:27 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/06 02:31:19 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@
 typedef enum e_state
 {
 	EMPTY,
-	VALID,
-	HAS_LINE,
 	FILE_END
 }	t_state;
 
@@ -36,20 +34,14 @@ typedef struct s_node
 	size_t			begin;
 	size_t			end;
 	size_t			cap;
-	size_t			newline_pos[BUFFER_SIZE];
-	size_t			newline_idx;
-	size_t			newline_count;
+	size_t			lf_pos[BUFFER_SIZE];
+	size_t			lf_idx;
+	size_t			lf_count;
 	ssize_t			read_len;
 }	t_node;
 
-
-size_t	ft_strlen_recur(char const *str, size_t const acc);
-
-char	*ft_memcpy_recur(char *dst, char const *src, size_t const len, size_t const acc);
-
-char	*ft_slice(char const *src, size_t const begin, size_t const end);
+char	*ft_memcpy_recur(char *dst, char const *src, size_t const len);
 
 char	*get_next_line(int fd);
-
 
 #endif /* GET_NEXT_LINE_H */

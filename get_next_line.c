@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:28:27 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/03 18:18:20 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/06 02:31:02 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,28 +21,41 @@ static t_node	**append_data(t_node **node, char *buffer)
 	--(*node)->read_len;
 	if (*buffer == '\n')
 	{
-		(*node)->newline_pos[(*node)->newline_idx++] = (*node)->end;
-		++(*node)->newline_count;
+		(*node)->lf_pos[(*node)->lf_idx++] = (*node)->end;
+		++(*node)->lf_count;
 	}
 	(*node)->saved_string[(*node)->end++] = *buffer;
 	return (append_data(node, buffer + 1));
 }
 
-static char	*parse_line(t_node *node)
+static char	*parse_line(t_node **node)
 {
 	char	*string;
+	size_t	len;
+	t_node	*tmp;
 
-	string = malloc(sizeof(char) * (node->newline_pos[node->newline_idx] + 2));
+	if ((*node)->state != FILE_END)
+		len = (*node)->lf_pos[(*node)->lf_idx] - (*node)->begin + 1;
+	else
+		len = (*node)->end - (*node)->begin;
+	if (len == 0)
+	{
+		tmp = (*node)->next;
+		free((*node)->saved_string);
+		free(*node);
+		*node = tmp;
+		return (NULL);
+	}
+	string = malloc(sizeof(char) * (len + 1));
 	if (string == NULL)
 		return (NULL);
-	ft_memcpy_recur(string, node->saved_string, node->newline_pos[node->newline_idx] + 1, 0);
-	string[node->newline_pos[node->newline_idx] + 1] = '\0';
-	node->begin = node->newline_pos[node->newline_idx] + 1;
-	++node->newline_idx;
-	if (node->newline_idx == node->newline_count)
+	*ft_memcpy_recur(string, (*node)->saved_string + (*node)->begin, len) = '\0';
+	(*node)->begin = (*node)->lf_pos[(*node)->lf_idx] + 1;
+	++(*node)->lf_idx;
+	if ((*node)->lf_idx == (*node)->lf_count)
 	{
-		node->newline_idx = 0;
-		node->newline_count = 0;
+		(*node)->lf_idx = 0;
+		(*node)->lf_count = 0;
 	}
 	return (string);
 }
@@ -53,8 +66,8 @@ static char	*process(t_node **node)
 	char	*new_string;
 	t_node	*tmp;
 
-	if ((*node)->state != EMPTY) // XXX
-		return (parse_line(*node));
+	if ((*node)->lf_idx < (*node)->lf_count || (*node)->state == FILE_END)
+		return (parse_line(node));
 	(*node)->read_len = read((*node)->fd, buffer, BUFFER_SIZE);
 	if ((*node)->read_len < 0)
 	{
@@ -64,20 +77,24 @@ static char	*process(t_node **node)
 		*node = tmp;
 		return (NULL);
 	}
-	if ((*node)->read_len < BUFFER_SIZE)
-		(*node)->state = FILE_END; // XXX
-	if ((*node)->state == EMPTY || (*node)->cap - (*node)->end < (size_t)(*node)->read_len)
+	if ((*node)->read_len == 0)
+		(*node)->state = FILE_END;
+	if ((*node)->saved_string == NULL || (*node)->cap - (*node)->end < (size_t)(*node)->read_len)
 	{
-		new_string = malloc(sizeof(char) * ((*node)->cap + (*node)->read_len + 1));
+		new_string = malloc(sizeof(char) * ((*node)->cap + (*node)->read_len));
 		if (new_string == NULL)
-			return (NULL); // XXX
-		ft_memcpy_recur(new_string, (*node)->saved_string, (*node)->end - (*node)->begin, 0);
-		ft_memcpy_recur(new_string + (*node)->end - (*node)->begin, (*node)->saved_string, (*node)->read_len, 0);
-		new_string[(*node)->end - (*node)->begin + (*node)->read_len + 1] = '\0';
+			return (NULL);
+		if ((*node)->saved_string)
+			ft_memcpy_recur(new_string, (*node)->saved_string + (*node)->begin, (*node)->end - (*node)->begin);
+		free((*node)->saved_string);
+		(*node)->saved_string = new_string;
+		(*node)->end = (*node)->end - (*node)->begin;
+		(*node)->cap += (*node)->read_len;
+		(*node)->begin = 0;
 	}
-	if (append_data(node, buffer))
-		return (process(node));
-	return (NULL);
+	append_data(node, buffer);
+	(*node)->lf_idx = 0;
+	return (process(node));
 }
 
 static char	*gnl(t_node **node, int fd)
@@ -94,9 +111,15 @@ static char	*gnl(t_node **node, int fd)
 		*node = malloc(sizeof(t_node));
 		if (*node == NULL)
 			return (NULL);
+		(*node)->next = NULL;
 		(*node)->fd = fd;
 		(*node)->state = EMPTY;
-		(*node)->next = NULL;
+		(*node)->saved_string = NULL;
+		(*node)->begin = 0;
+		(*node)->end = 0;
+		(*node)->cap = 0;
+		(*node)->lf_idx = 0;
+		(*node)->lf_count = 0;
 		return (gnl(node, fd));
 	}
 }
