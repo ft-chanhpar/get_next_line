@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:27:50 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/06 02:31:19 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/06 12:15:22 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,11 @@ typedef struct s_node
 	size_t			lf_count;
 	ssize_t			read_len;
 }	t_node;
+
+typedef struct s_head_node
+{
+	t_node	*next;
+}	t_head_node;
 
 char	*ft_memcpy_recur(char *dst, char const *src, size_t const len);
 
