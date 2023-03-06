@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:28:27 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/06 17:03:06 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/06 16:32:52 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,28 +14,28 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-static int	reserve_node(t_node *node)
+static t_node	*reserve_node(t_node *node)
 {
 	char	*copy;
 
 	copy = malloc(sizeof(char) * (node->cap + node->read_len));
 	if (copy == NULL)
-		return (-1);
-	if (node->saved != NULL)
+		return (NULL);
+	if (node->saved)
 		ft_memcopy(copy, node->saved + node->begin, node->end - node->begin);
 	free(node->saved);
 	node->saved = copy;
-	node->end -= node->begin;
+	node->end = node->end - node->begin;
 	node->cap += node->read_len;
 	node->begin = 0;
-	return (0);
+	return (node);
 }
 
 static char	*process(t_node **node)
 {
 	char	buffer[BUFFER_SIZE];
 
-	if ((*node)->lf_idx < (*node)->lf_count || (*node)->is_eof == TRUE)
+	if ((*node)->lf_idx < (*node)->lf_count || (*node)->is_eof)
 		return (parse_line(node));
 	(*node)->read_len = read((*node)->fd, buffer, BUFFER_SIZE);
 	if ((*node)->read_len < 0)
@@ -43,10 +43,9 @@ static char	*process(t_node **node)
 	(*node)->is_eof = ((*node)->read_len == 0);
 	if ((*node)->cap - (*node)->end < (size_t)(*node)->read_len)
 	{
-		if (reserve_node(*node) < 0)
+		if (reserve_node(*node) == NULL)
 			return (NULL);
 	}
-	(*node)->lf_idx = 0;
 	append_data(node, buffer);
 	(*node)->lf_idx = 0;
 	return (process(node));
@@ -65,7 +64,7 @@ static char	*gnl(t_node **node, int fd)
 		return (NULL);
 	(*node)->next = NULL;
 	(*node)->fd = fd;
-	(*node)->is_eof = FALSE;
+	(*node)->is_eof = 0;
 	(*node)->saved = NULL;
 	(*node)->begin = 0;
 	(*node)->end = 0;
