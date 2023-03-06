@@ -79,7 +79,7 @@ static char	*process(t_node **node)
 	}
 	if ((*node)->read_len == 0)
 		(*node)->state = FILE_END;
-	if ((*node)->saved_string == NULL || (*node)->cap - (*node)->end < (size_t)(*node)->read_len)
+	if ((*node)->cap - (*node)->end < (size_t)(*node)->read_len) // XXX check condition
 	{
 		new_string = malloc(sizeof(char) * ((*node)->cap + (*node)->read_len));
 		if (new_string == NULL)
