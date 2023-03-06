@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:28:27 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/06 12:16:09 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/06 13:14:54 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,10 @@ static char	*parse_line(t_node **node)
 {
 	char	*string;
 	size_t	len;
-	t_node	*tmp;
 
 	if ((*node)->state != FILE_END)
 	{
 		len = (*node)->lf_pos[(*node)->lf_idx] - (*node)->begin + 1;
-		string = malloc(sizeof(char) * (len + 1));
-		if (string == NULL)
-			return (NULL);
-		*ft_memcpy_recur(string, (*node)->saved_string + (*node)->begin, len) = '\0';
 		++(*node)->lf_idx;
 		if ((*node)->lf_idx == (*node)->lf_count)
 		{
@@ -52,18 +47,12 @@ static char	*parse_line(t_node **node)
 	{
 		len = (*node)->end - (*node)->begin;
 		if (len == 0)
-		{
-			tmp = (*node)->next;
-			free((*node)->saved_string);
-			free(*node);
-			*node = tmp;
-			return (NULL);
-		}
-		string = malloc(sizeof(char) * (len + 1));
-		if (string == NULL)
-			return (NULL);
-		*ft_memcpy_recur(string, (*node)->saved_string + (*node)->begin, len) = '\0';
+			return ((char *)clear_node(node));
 	}
+	string = malloc(sizeof(char) * (len + 1));
+	if (string == NULL)
+		return (NULL);
+	*ft_memcopy(string, (*node)->saved_string + (*node)->begin, len) = '\0';
 	(*node)->begin += len;
 	return (string);
 }
@@ -72,19 +61,12 @@ static char	*process(t_node **node)
 {
 	char	buffer[BUFFER_SIZE];
 	char	*new_string;
-	t_node	*tmp;
 
 	if ((*node)->lf_idx < (*node)->lf_count || (*node)->state == FILE_END)
 		return (parse_line(node));
 	(*node)->read_len = read((*node)->fd, buffer, BUFFER_SIZE);
 	if ((*node)->read_len < 0)
-	{
-		tmp = (*node)->next;
-		free((*node)->saved_string);
-		free(*node);
-		*node = tmp;
-		return (NULL);
-	}
+		return ((char *)clear_node(node));
 	if ((*node)->read_len == 0)
 		(*node)->state = FILE_END;
 	if ((*node)->cap - (*node)->end < (size_t)(*node)->read_len)
@@ -93,7 +75,7 @@ static char	*process(t_node **node)
 		if (new_string == NULL)
 			return (NULL);
 		if ((*node)->saved_string)
-			ft_memcpy_recur(new_string, (*node)->saved_string + (*node)->begin, (*node)->end - (*node)->begin);
+			ft_memcopy(new_string, (*node)->saved_string + (*node)->begin, (*node)->end - (*node)->begin);
 		free((*node)->saved_string);
 		(*node)->saved_string = new_string;
 		(*node)->end = (*node)->end - (*node)->begin;
