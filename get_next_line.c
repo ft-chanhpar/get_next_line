@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:28:27 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/06 13:14:54 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/06 13:39:45 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,53 +14,27 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-static t_node	**append_data(t_node **node, char *buffer)
+static t_node	*reserve_node(t_node *node)
 {
-	if ((*node)->read_len == 0)
-		return (node);
-	--(*node)->read_len;
-	if (*buffer == '\n')
-	{
-		(*node)->lf_pos[(*node)->lf_idx++] = (*node)->end;
-		++(*node)->lf_count;
-	}
-	(*node)->saved_string[(*node)->end++] = *buffer;
-	return (append_data(node, buffer + 1));
-}
+	char	*new_string;
 
-static char	*parse_line(t_node **node)
-{
-	char	*string;
-	size_t	len;
-
-	if ((*node)->state != FILE_END)
-	{
-		len = (*node)->lf_pos[(*node)->lf_idx] - (*node)->begin + 1;
-		++(*node)->lf_idx;
-		if ((*node)->lf_idx == (*node)->lf_count)
-		{
-			(*node)->lf_idx = 0;
-			(*node)->lf_count = 0;
-		}
-	}
-	else
-	{
-		len = (*node)->end - (*node)->begin;
-		if (len == 0)
-			return ((char *)clear_node(node));
-	}
-	string = malloc(sizeof(char) * (len + 1));
-	if (string == NULL)
+	new_string = malloc(sizeof(char) * (node->cap + node->read_len));
+	if (new_string == NULL)
 		return (NULL);
-	*ft_memcopy(string, (*node)->saved_string + (*node)->begin, len) = '\0';
-	(*node)->begin += len;
-	return (string);
+	if (node->saved_string)
+		ft_memcopy(new_string, node->saved_string + node->begin, \
+				node->end - node->begin);
+	free(node->saved_string);
+	node->saved_string = new_string;
+	node->end = node->end - node->begin;
+	node->cap += node->read_len;
+	node->begin = 0;
+	return (node);
 }
 
 static char	*process(t_node **node)
 {
 	char	buffer[BUFFER_SIZE];
-	char	*new_string;
 
 	if ((*node)->lf_idx < (*node)->lf_count || (*node)->state == FILE_END)
 		return (parse_line(node));
@@ -71,16 +45,8 @@ static char	*process(t_node **node)
 		(*node)->state = FILE_END;
 	if ((*node)->cap - (*node)->end < (size_t)(*node)->read_len)
 	{
-		new_string = malloc(sizeof(char) * ((*node)->cap + (*node)->read_len));
-		if (new_string == NULL)
+		if (reserve_node(*node) == NULL)
 			return (NULL);
-		if ((*node)->saved_string)
-			ft_memcopy(new_string, (*node)->saved_string + (*node)->begin, (*node)->end - (*node)->begin);
-		free((*node)->saved_string);
-		(*node)->saved_string = new_string;
-		(*node)->end = (*node)->end - (*node)->begin;
-		(*node)->cap += (*node)->read_len;
-		(*node)->begin = 0;
 	}
 	append_data(node, buffer);
 	(*node)->lf_idx = 0;

@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/20 22:23:34 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/06 13:02:49 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/06 13:40:04 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,4 +32,47 @@ void	*clear_node(t_node **node)
 	free(*node);
 	*node = tmp;
 	return (NULL);
+}
+
+t_node	**append_data(t_node **node, char *buffer)
+{
+	if ((*node)->read_len == 0)
+		return (node);
+	--(*node)->read_len;
+	if (*buffer == '\n')
+	{
+		(*node)->lf_pos[(*node)->lf_idx++] = (*node)->end;
+		++(*node)->lf_count;
+	}
+	(*node)->saved_string[(*node)->end++] = *buffer;
+	return (append_data(node, buffer + 1));
+}
+
+char	*parse_line(t_node **node)
+{
+	char	*string;
+	size_t	len;
+
+	if ((*node)->state != FILE_END)
+	{
+		len = (*node)->lf_pos[(*node)->lf_idx] - (*node)->begin + 1;
+		++(*node)->lf_idx;
+		if ((*node)->lf_idx == (*node)->lf_count)
+		{
+			(*node)->lf_idx = 0;
+			(*node)->lf_count = 0;
+		}
+	}
+	else
+	{
+		len = (*node)->end - (*node)->begin;
+		if (len == 0)
+			return ((char *)clear_node(node));
+	}
+	string = malloc(sizeof(char) * (len + 1));
+	if (string == NULL)
+		return (NULL);
+	*ft_memcopy(string, (*node)->saved_string + (*node)->begin, len) = '\0';
+	(*node)->begin += len;
+	return (string);
 }
