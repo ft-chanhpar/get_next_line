@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:27:50 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/06 13:35:50 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/06 16:19:46 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ typedef struct s_node
 {
 	struct s_node	*next;
 	int				fd;
-	t_state			state;
-	char			*saved_string;
+	t_state			is_eof;
+	char			*saved;
 	size_t			begin;
 	size_t			end;
 	size_t			cap;

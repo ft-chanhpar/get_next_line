@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:28:27 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/06 13:39:45 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/06 16:32:52 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,15 @@
 
 static t_node	*reserve_node(t_node *node)
 {
-	char	*new_string;
+	char	*copy;
 
-	new_string = malloc(sizeof(char) * (node->cap + node->read_len));
-	if (new_string == NULL)
+	copy = malloc(sizeof(char) * (node->cap + node->read_len));
+	if (copy == NULL)
 		return (NULL);
-	if (node->saved_string)
-		ft_memcopy(new_string, node->saved_string + node->begin, \
-				node->end - node->begin);
-	free(node->saved_string);
-	node->saved_string = new_string;
+	if (node->saved)
+		ft_memcopy(copy, node->saved + node->begin, node->end - node->begin);
+	free(node->saved);
+	node->saved = copy;
 	node->end = node->end - node->begin;
 	node->cap += node->read_len;
 	node->begin = 0;
@@ -36,13 +35,12 @@ static char	*process(t_node **node)
 {
 	char	buffer[BUFFER_SIZE];
 
-	if ((*node)->lf_idx < (*node)->lf_count || (*node)->state == FILE_END)
+	if ((*node)->lf_idx < (*node)->lf_count || (*node)->is_eof)
 		return (parse_line(node));
 	(*node)->read_len = read((*node)->fd, buffer, BUFFER_SIZE);
 	if ((*node)->read_len < 0)
 		return ((char *)clear_node(node));
-	if ((*node)->read_len == 0)
-		(*node)->state = FILE_END;
+	(*node)->is_eof = ((*node)->read_len == 0);
 	if ((*node)->cap - (*node)->end < (size_t)(*node)->read_len)
 	{
 		if (reserve_node(*node) == NULL)
@@ -66,8 +64,8 @@ static char	*gnl(t_node **node, int fd)
 		return (NULL);
 	(*node)->next = NULL;
 	(*node)->fd = fd;
-	(*node)->state = EMPTY;
-	(*node)->saved_string = NULL;
+	(*node)->is_eof = 0;
+	(*node)->saved = NULL;
 	(*node)->begin = 0;
 	(*node)->end = 0;
 	(*node)->cap = 0;
