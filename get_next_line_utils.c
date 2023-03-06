@@ -5,83 +5,73 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/21 03:29:02 by chanhpar          #+#    #+#             */
-/*   Updated: 2021/12/26 00:37:55 by chanhpar         ###   ########.fr       */
+/*   Created: 2023/02/20 22:23:34 by chanhpar          #+#    #+#             */
+/*   Updated: 2023/03/06 16:30:41 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdlib.h>
 #include "get_next_line.h"
 
-size_t	ft_strlen(const char *str)
+char	*ft_memcopy(char *dst, char const *src, size_t const len)
 {
-	size_t	i;
-
-	i = 0;
-	while (str[i] != '\0')
-		i++;
-	return (i);
+	if (len != 0)
+	{
+		*dst = *src;
+		return (ft_memcopy(dst + 1, src + 1, len - 1));
+	}
+	return (dst);
 }
 
-void	*ft_memmove(void *dest, const void *src, size_t n)
+void	*clear_node(t_node **node)
 {
-	unsigned char	*tmp1;
-	unsigned char	*tmp2;
+	t_node	*tmp;
 
-	if (dest == NULL && src == NULL)
-		return (NULL);
-	tmp1 = (unsigned char *)dest;
-	tmp2 = (unsigned char *)src;
-	if (tmp1 > tmp2)
+	tmp = (*node)->next;
+	free((*node)->saved);
+	free(*node);
+	*node = tmp;
+	return (NULL);
+}
+
+t_node	**append_data(t_node **node, char *buffer)
+{
+	if ((*node)->read_len == 0)
+		return (node);
+	--(*node)->read_len;
+	if (*buffer == '\n')
 	{
-		while (n > 0)
-		{
-			n--;
-			*(tmp1 + n) = *(tmp2 + n);
-		}
+		(*node)->lf_pos[(*node)->lf_idx++] = (*node)->end;
+		++(*node)->lf_count;
+	}
+	(*node)->saved[(*node)->end++] = *buffer;
+	return (append_data(node, buffer + 1));
+}
+
+char	*parse_line(t_node **node)
+{
+	char	*string;
+	size_t	len;
+
+	if ((*node)->is_eof == FILE_END)
+	{
+		len = (*node)->end - (*node)->begin;
+		if (len == 0)
+			return ((char *)clear_node(node));
 	}
 	else
 	{
-		while (n > 0)
+		len = (*node)->lf_pos[(*node)->lf_idx++] - (*node)->begin + 1;
+		if ((*node)->lf_idx == (*node)->lf_count)
 		{
-			n--;
-			*(tmp1++) = *(tmp2++);
+			(*node)->lf_idx = 0;
+			(*node)->lf_count = 0;
 		}
 	}
-	return (dest);
-}
-
-char	*ft_substr(char const *s, size_t len)
-{
-	char	*rst;
-
-	rst = (char *)malloc(sizeof(char) * (len + 1));
-	if (!rst)
+	string = malloc(sizeof(char) * (len + 1));
+	if (string == NULL)
 		return (NULL);
-	rst = ft_memmove(rst, s, len);
-	rst[len] = '\0';
-	return (rst);
-}
-
-char	*ft_strjoin(char const *s1, char const *s2, size_t len)
-{
-	size_t	len1;
-	size_t	len2;
-	char	*rst;
-	char	*tmp;
-
-	len2 = ft_strlen(s2);
-	if (len > len2)
-		len = len2;
-	if (s1 == NULL)
-		return (ft_substr(s2, len));
-	len1 = ft_strlen(s1);
-	rst = (char *)malloc(sizeof(char) * (len1 + len + 1));
-	if (!rst)
-		return (NULL);
-	tmp = rst;
-	tmp = ft_memmove(tmp, s1, len1);
-	tmp += len1;
-	tmp = ft_memmove(tmp, s2, len);
-	tmp[len] = '\0';
-	return (rst);
+	*ft_memcopy(string, (*node)->saved + (*node)->begin, len) = '\0';
+	(*node)->begin += len;
+	return (string);
 }

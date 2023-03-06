@@ -1,0 +1,9 @@
+*.d
+*.o
+*.gch
+*.pch
+
+*.lib
+*.a
+*.out
+*.dSYM/

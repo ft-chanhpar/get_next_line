@@ -5,77 +5,80 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/11/21 03:25:35 by chanhpar          #+#    #+#             */
-/*   Updated: 2021/12/29 01:52:44 by chanhpar         ###   ########.fr       */
+/*   Created: 2023/01/19 14:28:27 by chanhpar          #+#    #+#             */
+/*   Updated: 2023/03/06 16:32:52 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdlib.h>
+#include <unistd.h>
 
-static char	*ft_err_eof(char **rst, ssize_t cnt)
+static t_node	*reserve_node(t_node *node)
 {
-	if (cnt < 0)
-	{
-		free(*rst);
-		*rst = NULL;
-	}
-	return (*rst);
+	char	*copy;
+
+	copy = malloc(sizeof(char) * (node->cap + node->read_len));
+	if (copy == NULL)
+		return (NULL);
+	if (node->saved)
+		ft_memcopy(copy, node->saved + node->begin, node->end - node->begin);
+	free(node->saved);
+	node->saved = copy;
+	node->end = node->end - node->begin;
+	node->cap += node->read_len;
+	node->begin = 0;
+	return (node);
 }
 
-static void	ft_join_swap(char *str, char **rst, ssize_t len)
+static char	*process(t_node **node)
 {
-	char	*join;
+	char	buffer[BUFFER_SIZE];
 
-	join = ft_strjoin(*rst, str, len);
-	free(*rst);
-	*rst = join;
+	if ((*node)->lf_idx < (*node)->lf_count || (*node)->is_eof)
+		return (parse_line(node));
+	(*node)->read_len = read((*node)->fd, buffer, BUFFER_SIZE);
+	if ((*node)->read_len < 0)
+		return ((char *)clear_node(node));
+	(*node)->is_eof = ((*node)->read_len == 0);
+	if ((*node)->cap - (*node)->end < (size_t)(*node)->read_len)
+	{
+		if (reserve_node(*node) == NULL)
+			return (NULL);
+	}
+	append_data(node, buffer);
+	(*node)->lf_idx = 0;
+	return (process(node));
 }
 
-static int	ft_check(char **rst, t_file *file)
+static char	*gnl(t_node **node, int fd)
 {
-	ssize_t	len;
-	char	*str;
-
-	str = file->str;
-	len = 0;
-	while (len < file->cnt && str[len] != '\n')
-		len++;
-	if (len != file->cnt)
+	if (*node != NULL)
 	{
-		len++;
-		ft_join_swap(str, rst, len);
-		file->cnt -= len;
-		ft_memmove(str, str + len, file->cnt);
-		return (1);
+		if ((*node)->fd == fd)
+			return (process(node));
+		return (gnl(&(*node)->next, fd));
 	}
-	else
-	{
-		ft_join_swap(str, rst, len);
-		file->cnt = 0;
-		return (0);
-	}
+	*node = malloc(sizeof(t_node));
+	if (*node == NULL)
+		return (NULL);
+	(*node)->next = NULL;
+	(*node)->fd = fd;
+	(*node)->is_eof = 0;
+	(*node)->saved = NULL;
+	(*node)->begin = 0;
+	(*node)->end = 0;
+	(*node)->cap = 0;
+	(*node)->lf_idx = 0;
+	(*node)->lf_count = 0;
+	return (gnl(node, fd));
 }
 
 char	*get_next_line(int fd)
 {
-	char			*rst;
-	static t_file	file;
+	static t_head_node	head;
 
-	if (fd < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	rst = NULL;
-	while (1)
-	{
-		if (file.cnt == 0 && file.is_end == 0)
-		{
-			file.cnt = read(fd, file.str, BUFFER_SIZE);
-			if (file.cnt < BUFFER_SIZE)
-				file.is_end = 1;
-		}
-		if (file.cnt <= 0)
-			return (ft_err_eof(&rst, file.cnt));
-		if (ft_check(&rst, &file))
-			break ;
-	}
-	return (rst);
+	return (gnl(&head.next, fd));
 }
