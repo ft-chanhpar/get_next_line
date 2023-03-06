@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:27:50 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/06 16:19:46 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/06 16:54:22 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,17 @@
 
 # include <sys/types.h>
 
-typedef enum e_state
+typedef enum e_bool
 {
-	EMPTY,
-	FILE_END
-}	t_state;
+	FALSE,
+	TRUE
+}	t_bool;
 
 typedef struct s_node
 {
 	struct s_node	*next;
 	int				fd;
-	t_state			is_eof;
+	t_bool			is_eof;
 	char			*saved;
 	size_t			begin;
 	size_t			end;
@@ -51,7 +51,7 @@ void	*clear_node(t_node **node);
 
 char	*parse_line(t_node **node);
 
-t_node	**append_data(t_node **node, char *buffer);
+t_node	**append_data(t_node **node, char const *buffer);
 
 char	*get_next_line(int fd);
 

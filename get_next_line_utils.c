@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/20 22:23:34 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/06 16:30:41 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/06 16:53:39 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	*clear_node(t_node **node)
 	return (NULL);
 }
 
-t_node	**append_data(t_node **node, char *buffer)
+t_node	**append_data(t_node **node, char const *buffer)
 {
 	if ((*node)->read_len == 0)
 		return (node);
@@ -53,7 +53,7 @@ char	*parse_line(t_node **node)
 	char	*string;
 	size_t	len;
 
-	if ((*node)->is_eof == FILE_END)
+	if ((*node)->is_eof == TRUE)
 	{
 		len = (*node)->end - (*node)->begin;
 		if (len == 0)
@@ -62,11 +62,7 @@ char	*parse_line(t_node **node)
 	else
 	{
 		len = (*node)->lf_pos[(*node)->lf_idx++] - (*node)->begin + 1;
-		if ((*node)->lf_idx == (*node)->lf_count)
-		{
-			(*node)->lf_idx = 0;
-			(*node)->lf_count = 0;
-		}
+		(*node)->lf_count = ((*node)->lf_idx != (*node)->lf_count);
 	}
 	string = malloc(sizeof(char) * (len + 1));
 	if (string == NULL)
