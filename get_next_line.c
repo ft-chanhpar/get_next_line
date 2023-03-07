@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:28:27 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/07 15:06:18 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/07 18:39:24 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static t_node	*reserve_node(t_node *node)
 {
 	char	*copy;
 
-	copy = malloc(sizeof(char) * (node->cap + node->read_len));
+	copy = malloc(sizeof(char) * ((node->cap << 1) + node->read_len));
 	if (copy == NULL)
 		return (NULL);
 	if (node->saved)
@@ -26,7 +26,7 @@ static t_node	*reserve_node(t_node *node)
 	free(node->saved);
 	node->saved = copy;
 	node->end = node->end - node->begin;
-	node->cap += node->read_len;
+	node->cap += node->cap + node->read_len;
 	node->begin = 0;
 	return (node);
 }
@@ -42,7 +42,7 @@ static char	*process(t_node **node, char *buffer)
 	if ((*node)->cap - (*node)->end < (size_t)(*node)->read_len)
 	{
 		if (reserve_node(*node) == NULL)
-			return (NULL);
+			return ((char *)clear_node(node));
 	}
 	(*node)->lf_idx = 0;
 	append_data(node, buffer);
