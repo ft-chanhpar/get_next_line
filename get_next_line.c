@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:28:27 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/07 14:18:25 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/07 15:06:18 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ static char	*process(t_node **node, char *buffer)
 		if (reserve_node(*node) == NULL)
 			return (NULL);
 	}
+	(*node)->lf_idx = 0;
 	append_data(node, buffer);
 	(*node)->lf_idx = 0;
 	return (process(node, buffer));
