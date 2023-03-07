@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:27:50 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/06 16:19:46 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/07 14:16:34 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ typedef struct s_node
 typedef struct s_head_node
 {
 	t_node	*next;
+	char	buffer[BUFFER_SIZE];
 }	t_head_node;
 
 char	*ft_memcopy(char *dst, char const *src, size_t const len);
