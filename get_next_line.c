@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:28:27 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/22 22:22:19 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/23 00:58:36 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,11 @@ static char	*process(t_node **node, char *buffer)
 	if ((*node)->lf_idx < (*node)->lf_count || (*node)->is_eof)
 		return (parse_line(node));
 	(*node)->read_len = read((*node)->fd, buffer, BUFFER_SIZE);
-	if ((*node)->read_len < 0)
+	if ((*node)->read_len < 0 || \
+		((*node)->cap - (*node)->end < (size_t)(*node)->read_len && \
+		reserve_node(*node) < 0))
 		return ((char *)clear_node(node));
 	(*node)->is_eof = ((*node)->read_len == 0);
-	if ((*node)->cap - (*node)->end < (size_t)(*node)->read_len)
-	{
-		if (reserve_node(*node) < 0)
-			return ((char *)clear_node(node));
-	}
 	(*node)->lf_idx = 0;
 	append_data(node, buffer);
 	(*node)->lf_idx = 0;
@@ -55,8 +52,13 @@ static char	*gnl(t_node **node, char *buffer, int fd)
 	if (*node != NULL)
 	{
 		if ((*node)->fd == fd)
+		{
 			return (process(node, buffer));
-		return (gnl(&(*node)->next, buffer, fd));
+		}
+		else
+		{
+			return (gnl(&(*node)->next, buffer, fd));
+		}
 	}
 	*node = malloc(sizeof(t_node));
 	if (*node == NULL)
