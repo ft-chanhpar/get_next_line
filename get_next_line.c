@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:28:27 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/07 18:39:24 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/22 22:22:19 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,21 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-static t_node	*reserve_node(t_node *node)
+static int	reserve_node(t_node *node)
 {
 	char	*copy;
 
 	copy = malloc(sizeof(char) * ((node->cap << 1) + node->read_len));
 	if (copy == NULL)
-		return (NULL);
+		return (-1);
 	if (node->saved)
 		ft_memcopy(copy, node->saved + node->begin, node->end - node->begin);
 	free(node->saved);
 	node->saved = copy;
-	node->end = node->end - node->begin;
+	node->end -= node->begin;
 	node->cap += node->cap + node->read_len;
 	node->begin = 0;
-	return (node);
+	return (0);
 }
 
 static char	*process(t_node **node, char *buffer)
@@ -41,7 +41,7 @@ static char	*process(t_node **node, char *buffer)
 	(*node)->is_eof = ((*node)->read_len == 0);
 	if ((*node)->cap - (*node)->end < (size_t)(*node)->read_len)
 	{
-		if (reserve_node(*node) == NULL)
+		if (reserve_node(*node) < 0)
 			return ((char *)clear_node(node));
 	}
 	(*node)->lf_idx = 0;
