@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:28:27 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/23 00:58:36 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/24 13:01:28 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static int	reserve_node(t_node *node)
 
 static char	*process(t_node **node, char *buffer)
 {
-	if ((*node)->lf_idx < (*node)->lf_count || (*node)->is_eof)
+	if ((*node)->que_head != (*node)->que_tail || (*node)->is_eof)
 		return (parse_line(node));
 	(*node)->read_len = read((*node)->fd, buffer, BUFFER_SIZE);
 	if ((*node)->read_len < 0 || \
@@ -41,9 +41,7 @@ static char	*process(t_node **node, char *buffer)
 		reserve_node(*node) < 0))
 		return ((char *)clear_node(node));
 	(*node)->is_eof = ((*node)->read_len == 0);
-	(*node)->lf_idx = 0;
 	append_data(node, buffer);
-	(*node)->lf_idx = 0;
 	return (process(node, buffer));
 }
 
@@ -70,8 +68,8 @@ static char	*gnl(t_node **node, char *buffer, int fd)
 	(*node)->begin = 0;
 	(*node)->end = 0;
 	(*node)->cap = 0;
-	(*node)->lf_idx = 0;
-	(*node)->lf_count = 0;
+	(*node)->que_head = 0;
+	(*node)->que_tail = 0;
 	return (gnl(node, buffer, fd));
 }
 
