@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:28:27 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/24 13:01:28 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/24 17:50:42 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,19 +49,18 @@ static char	*gnl(t_node **node, char *buffer, int fd)
 {
 	if (*node != NULL)
 	{
-		if ((*node)->fd == fd)
-		{
-			return (process(node, buffer));
-		}
+		if ((*node)->fd > fd)
+			return (gnl(&(*node)->left, buffer, fd));
+		else if ((*node)->fd < fd)
+			return (gnl(&(*node)->right, buffer, fd));
 		else
-		{
-			return (gnl(&(*node)->next, buffer, fd));
-		}
+			return (process(node, buffer));
 	}
 	*node = malloc(sizeof(t_node));
 	if (*node == NULL)
 		return (NULL);
-	(*node)->next = NULL;
+	(*node)->left = NULL;
+	(*node)->right = NULL;
 	(*node)->fd = fd;
 	(*node)->is_eof = 0;
 	(*node)->saved = NULL;
@@ -79,5 +78,5 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	return (gnl(&head.next, head.buffer, fd));
+	return (gnl(&head.next[fd % HASH_SIZE], head.buffer, fd));
 }
