@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:27:50 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/24 17:50:31 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/24 13:02:32 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 1024
 # endif
-
-# define HASH_SIZE 10
 
 # include <sys/types.h>
 
@@ -29,8 +27,7 @@ typedef enum e_state
 
 typedef struct s_node
 {
-	struct s_node	*left;
-	struct s_node	*right;
+	struct s_node	*next;
 	int				fd;
 	t_state			is_eof;
 	char			*saved;
@@ -45,7 +42,7 @@ typedef struct s_node
 
 typedef struct s_head_node
 {
-	t_node	*next[HASH_SIZE];
+	t_node	*next;
 	char	buffer[BUFFER_SIZE];
 }	t_head_node;
 

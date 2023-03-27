@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/20 22:23:34 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/24 17:52:46 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/24 13:02:37 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,40 +26,14 @@ char	*ft_memcopy(char *dst, char const *src, size_t const len)
 	}
 }
 
-static t_node	*leftmost(t_node *node)
-{
-	if (node->left)
-	{
-		return (leftmost(node->left));
-	}
-	else
-	{
-		return (node);
-	}
-}
-
 void	*clear_node(t_node **node)
 {
-	t_node	*left;
-	t_node	*right;
+	t_node	*tmp;
 
-	left = (*node)->left;
-	right = (*node)->right;
+	tmp = (*node)->next;
 	free((*node)->saved);
 	free(*node);
-	if (left != NULL && right != NULL)
-	{
-		leftmost(right)->left = left;
-		left = NULL;
-	}
-	if (left == NULL)
-	{
-		*node = right;
-	}
-	else
-	{
-		*node = left;
-	}
+	*node = tmp;
 	return (NULL);
 }
 
