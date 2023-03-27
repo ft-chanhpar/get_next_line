@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/20 22:23:34 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/24 13:02:37 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/27 15:08:13 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ char	*parse_line(t_node **node)
 	{
 		len = (*node)->end - (*node)->begin;
 		if (len == 0)
-			return ((char *)clear_node(node));
+			return (clear_node(node));
 	}
 	else
 	{
@@ -69,7 +69,7 @@ char	*parse_line(t_node **node)
 	}
 	string = malloc(sizeof(char) * (len + 1));
 	if (string == NULL)
-		return ((char *)clear_node(node));
+		return (clear_node(node));
 	*ft_memcopy(string, (*node)->saved + (*node)->begin, len) = '\0';
 	(*node)->begin += len;
 	return (string);

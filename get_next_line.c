@@ -6,13 +6,18 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:28:27 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/24 13:01:28 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/27 15:08:02 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdlib.h>
 #include <unistd.h>
+
+extern char		*ft_memcopy(char *dst, char const *src, size_t const len);
+extern void		*clear_node(t_node **node);
+extern char		*parse_line(t_node **node);
+extern t_node	**append_data(t_node **node, char *buffer);
 
 static int	reserve_node(t_node *node)
 {
@@ -39,10 +44,9 @@ static char	*process(t_node **node, char *buffer)
 	if ((*node)->read_len < 0 || \
 		((*node)->cap - (*node)->end < (size_t)(*node)->read_len && \
 		reserve_node(*node) < 0))
-		return ((char *)clear_node(node));
+		return (clear_node(node));
 	(*node)->is_eof = ((*node)->read_len == 0);
-	append_data(node, buffer);
-	return (process(node, buffer));
+	return (process(append_data(node, buffer), buffer));
 }
 
 static char	*gnl(t_node **node, char *buffer, int fd)
@@ -77,7 +81,7 @@ char	*get_next_line(int fd)
 {
 	static t_head_node	head;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (BUFFER_SIZE <= 0)
 		return (NULL);
 	return (gnl(&head.next, head.buffer, fd));
 }
