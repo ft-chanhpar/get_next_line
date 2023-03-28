@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/20 22:23:34 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/28 18:42:50 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/29 03:50:41 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*ft_mempcpy(char *dst, char const *src, size_t const len)
 	if (len != 0)
 	{
 		*dst = *src;
-		return (ft_memcopy(dst + 1, src + 1, len - 1));
+		return (ft_mempcpy(dst + 1, src + 1, len - 1));
 	}
 	else
 	{
