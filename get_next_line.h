@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:27:50 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/27 15:05:10 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/28 11:31:29 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ typedef struct s_node
 	size_t			begin;
 	size_t			end;
 	size_t			cap;
-	size_t			line_que[BUFFER_SIZE + 1];
+	size_t			line_que[BUFFER_SIZE | 2];
 	size_t			que_head;
 	size_t			que_tail;
 	ssize_t			read_len;

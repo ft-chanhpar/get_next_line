@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:28:27 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/27 15:08:02 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/28 11:30:03 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ static char	*gnl(t_node **node, char *buffer, int fd)
 	(*node)->cap = 0;
 	(*node)->que_head = 0;
 	(*node)->que_tail = 0;
-	return (gnl(node, buffer, fd));
+	return (process(node, buffer));
 }
 
 char	*get_next_line(int fd)
