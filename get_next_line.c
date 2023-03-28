@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-extern char		*ft_memcopy(char *dst, char const *src, size_t const len);
+extern char		*ft_mempcpy(char *dst, char const *src, size_t const len);
 extern void		*clear_node(t_node **node);
 extern char		*parse_line(t_node **node);
 extern t_node	**append_data(t_node **node, char *buffer);
@@ -28,7 +28,7 @@ static int	reserve_node(t_node *node)
 	if (copy == NULL)
 		return (-1);
 	if (node->saved)
-		ft_memcopy(copy, node->saved + node->begin, node->end - node->begin);
+		ft_mempcpy(copy, node->saved + node->begin, node->end - node->begin);
 	free(node->saved);
 	node->saved = copy;
 	node->end -= node->begin;

@@ -13,7 +13,7 @@
 #include <stdlib.h>
 #include "get_next_line.h"
 
-char	*ft_memcopy(char *dst, char const *src, size_t const len)
+char	*ft_mempcpy(char *dst, char const *src, size_t const len)
 {
 	if (len != 0)
 	{
@@ -70,7 +70,7 @@ char	*parse_line(t_node **node)
 	string = malloc(sizeof(char) * (len + 1));
 	if (string == NULL)
 		return (clear_node(node));
-	*ft_memcopy(string, (*node)->saved + (*node)->begin, len) = '\0';
+	*ft_mempcpy(string, (*node)->saved + (*node)->begin, len) = '\0';
 	(*node)->begin += len;
 	return (string);
 }
