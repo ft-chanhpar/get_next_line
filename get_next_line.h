@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:27:50 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/28 18:40:58 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/28 18:44:12 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ typedef enum e_state
 	FILE_END
 }	t_state;
 
+// rename variables: begin, end, que_head, que_tail?
+
 typedef struct s_node
 {
 	struct s_node	*next;
@@ -54,7 +56,7 @@ typedef struct s_node
 
 typedef struct s_head_node
 {
-	t_node	*next;
+	t_node	*next[10];
 	char	buffer[BUFFER_SIZE];
 }	t_head_node;
 

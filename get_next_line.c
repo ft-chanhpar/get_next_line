@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:28:27 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/28 18:34:36 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/28 18:43:38 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ extern void		*clear_node(t_node **node);
 extern char		*parse_line(t_node **node);
 extern t_node	**append_data(t_node **node, char *buffer);
 
+/* check size overflow? change to deque? */
 static int	reserve_node(t_node *node)
 {
 	char	*copy;
