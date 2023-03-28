@@ -6,18 +6,30 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:27:50 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/28 11:31:29 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/28 18:40:58 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
+# include <sys/types.h>
+
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 1024
 # endif
 
-# include <sys/types.h>
+# if BUFFER_SIZE == 0
+
+static const int	g_error[-1];
+
+# endif
+
+# if BUFFER_SIZE > 1
+#  define QUE_SIZE BUFFER_SIZE
+# else
+#  define QUE_SIZE 2
+# endif
 
 typedef enum e_state
 {
@@ -34,7 +46,7 @@ typedef struct s_node
 	size_t			begin;
 	size_t			end;
 	size_t			cap;
-	size_t			line_que[BUFFER_SIZE | 2];
+	size_t			line_que[QUE_SIZE];
 	size_t			que_head;
 	size_t			que_tail;
 	ssize_t			read_len;

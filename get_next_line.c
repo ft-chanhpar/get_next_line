@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:28:27 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/28 11:30:03 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/28 18:34:36 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,5 @@ char	*get_next_line(int fd)
 {
 	static t_head_node	head;
 
-	if (BUFFER_SIZE <= 0)
-		return (NULL);
 	return (gnl(&head.next, head.buffer, fd));
 }
