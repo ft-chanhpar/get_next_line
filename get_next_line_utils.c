@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/20 22:23:34 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/29 18:21:48 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/29 22:00:00 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,12 @@ static t_node	*get_rightmost(t_node *node)
 	}
 }
 
-t_node	*splay_tree(t_node *node)
+t_node	**splay_tree(t_node *node)
 {
 	t_direction	dir;
 
 	if (node->parent == NULL)
-		return (node);
+		return (node->root);
 	dir = (node == node->parent->child[RIGHT]);
 	if (node->parent->parent == NULL)
 	{
