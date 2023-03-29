@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/20 22:23:34 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/29 03:50:41 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/29 16:20:51 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,51 +26,88 @@ char	*ft_mempcpy(char *dst, char const *src, size_t const len)
 	}
 }
 
-void	*clear_node(t_node **node)
+static void	rotate_tree(t_node *node, t_direction const dir)
 {
-	t_node	*tmp;
+	t_node	*successor;
 
-	tmp = (*node)->next;
-	free((*node)->saved);
-	free(*node);
-	*node = tmp;
-	return (NULL);
-}
-
-t_node	**append_data(t_node **node, char *buffer)
-{
-	if ((*node)->read_len == 0)
-		return (node);
-	--(*node)->read_len;
-	if (*buffer == '\n')
+	successor = node->child[dir ^ 1];
+	if (successor != NULL)
 	{
-		(*node)->line_que[(*node)->que_tail++] = (*node)->end;
-		(*node)->que_tail %= QUE_SIZE;
+		node->child[dir ^ 1] = successor->child[dir];
+		if (successor->child[dir] != NULL)
+			successor->child[dir]->parent = node;
+		successor->parent = node->parent;
 	}
-	(*node)->saved[(*node)->end++] = *buffer;
-	return (append_data(node, buffer + 1));
+	if (node->parent == NULL)
+		*(node->root) = successor;
+	else
+		node->parent->child[node == node->parent->child[RIGHT]] = successor;
+	if (successor != NULL)
+		successor->child[dir] = node;
+	node->parent = successor;
 }
 
-char	*parse_line(t_node **node)
+static t_node	*get_rightmost(t_node *node)
 {
-	char	*string;
-	size_t	len;
-
-	if ((*node)->is_eof)
+	if (node->child[RIGHT])
 	{
-		len = (*node)->end - (*node)->begin;
-		if (len == 0)
-			return (clear_node(node));
+		return (get_rightmost(node->child[RIGHT]));
 	}
 	else
 	{
-		len = (*node)->line_que[(*node)->que_head++] - (*node)->begin + 1;
-		(*node)->que_head %= QUE_SIZE;
+		return (node);
 	}
-	string = malloc(sizeof(char) * (len + 1));
-	if (string == NULL)
-		return (clear_node(node));
-	*ft_mempcpy(string, (*node)->saved + (*node)->begin, len) = '\0';
-	(*node)->begin += len;
-	return (string);
+}
+
+void	splay_tree(t_node *node)
+{
+	t_direction	dir;
+
+	if (node->parent == NULL)
+		return ;
+	dir = (node == node->parent->child[RIGHT]);
+	if (node->parent->parent == NULL)
+	{
+		rotate_tree(node->parent, dir ^ 1);
+	}
+	else if (dir == (node->parent == node->parent->parent->child[RIGHT]))
+	{
+		rotate_tree(node->parent->parent, dir ^ 1);
+		rotate_tree(node->parent, dir ^ 1);
+	}
+	else
+	{
+		rotate_tree(node->parent, dir ^ 1);
+		rotate_tree(node->parent, dir);
+	}
+	splay_tree(node);
+}
+
+void	*clear_node(t_node *node)
+{
+	t_node	*childs[2];
+	t_node	*successor;
+
+	splay_tree(node);
+	childs[LEFT] = node->child[LEFT];
+	childs[RIGHT] = node->child[RIGHT];
+	successor = NULL;
+	if (childs[LEFT] != NULL)
+	{
+		childs[LEFT]->parent = NULL;
+		successor = get_rightmost(childs[LEFT]);
+		splay_tree(successor);
+		*(node->root) = successor;
+	}
+	if (childs[RIGHT] != NULL)
+	{
+		if (childs[LEFT] != NULL)
+			successor->child[RIGHT] = childs[RIGHT];
+		else
+			*(node->root) = childs[RIGHT];
+		childs[RIGHT]->parent = successor;
+	}
+	free(node->saved);
+	free(node);
+	return (NULL);
 }

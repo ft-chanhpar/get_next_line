@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:27:50 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/29 03:51:42 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/29 15:50:25 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,19 @@ typedef enum e_state
 	FILE_END
 }	t_state;
 
-// rename variables: begin, end, que_head, que_tail?
+typedef enum e_direction
+{
+	LEFT,
+	RIGHT
+}	t_direction;
+
+/* rename variables: begin, end, que_head, que_tail? */
 
 typedef struct s_node
 {
-	struct s_node	*next;
+	struct s_node	**root;
+	struct s_node	*parent;
+	struct s_node	*child[2];
 	int				fd;
 	t_state			is_eof;
 	char			*saved;
