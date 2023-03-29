@@ -37,13 +37,12 @@ static void	rotate_tree(t_node *node, t_direction const dir)
 		if (successor->child[dir] != NULL)
 			successor->child[dir]->parent = node;
 		successor->parent = node->parent;
+		successor->child[dir] = node;
 	}
 	if (node->parent == NULL)
 		*(node->root) = successor;
 	else
 		node->parent->child[node == node->parent->child[RIGHT]] = successor;
-	if (successor != NULL)
-		successor->child[dir] = node;
 	node->parent = successor;
 }
 

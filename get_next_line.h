@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:27:50 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/29 15:50:25 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/29 18:05:25 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,6 @@ static const int	g_error[-1];
 
 # define TABLE_SIZE 20
 
-typedef enum e_state
-{
-	EMPTY,
-	FILE_END
-}	t_state;
-
 typedef enum e_direction
 {
 	LEFT,
@@ -53,7 +47,7 @@ typedef struct s_node
 	struct s_node	*parent;
 	struct s_node	*child[2];
 	int				fd;
-	t_state			is_eof;
+	int				is_eof;
 	char			*saved;
 	size_t			begin;
 	size_t			end;
