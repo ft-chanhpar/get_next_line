@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:28:27 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/29 03:51:53 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/29 12:47:41 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,32 +20,28 @@ extern char		*parse_line(t_node **node);
 extern t_node	**append_data(t_node **node, char *buffer);
 
 /* check size overflow? change to deque? */
-static int	reserve_node(t_node *node)
+static char	*process(t_node **node, char *buffer)
 {
 	char	*copy;
 
-	copy = malloc(sizeof(char) * ((node->cap << 1) + node->read_len));
-	if (copy == NULL)
-		return (-1);
-	if (node->saved)
-		ft_mempcpy(copy, node->saved + node->begin, node->end - node->begin);
-	free(node->saved);
-	node->saved = copy;
-	node->end -= node->begin;
-	node->cap += node->cap + node->read_len;
-	node->begin = 0;
-	return (0);
-}
-
-static char	*process(t_node **node, char *buffer)
-{
 	if ((*node)->que_head != (*node)->que_tail || (*node)->is_eof)
 		return (parse_line(node));
 	(*node)->read_len = read((*node)->fd, buffer, BUFFER_SIZE);
-	if ((*node)->read_len < 0 || \
-		((*node)->cap - (*node)->end < (size_t)(*node)->read_len && \
-		reserve_node(*node) < 0))
+	if ((*node)->read_len < 0)
 		return (clear_node(node));
+	if ((*node)->cap - (*node)->end < (size_t)(*node)->read_len)
+	{
+		(*node)->end -= (*node)->begin;
+		(*node)->cap += (*node)->cap + (*node)->read_len;
+		copy = malloc(sizeof(char) * ((*node)->cap));
+		if (copy == NULL)
+			return (clear_node(node));
+		if ((*node)->saved)
+			ft_mempcpy(copy, (*node)->saved + (*node)->begin, (*node)->end);
+		free((*node)->saved);
+		(*node)->saved = copy;
+		(*node)->begin = 0;
+	}
 	(*node)->is_eof = ((*node)->read_len == 0);
 	return (process(append_data(node, buffer), buffer));
 }
