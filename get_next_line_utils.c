@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/20 22:23:34 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/29 16:20:51 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/29 18:21:48 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,12 @@ static t_node	*get_rightmost(t_node *node)
 	}
 }
 
-void	splay_tree(t_node *node)
+t_node	*splay_tree(t_node *node)
 {
 	t_direction	dir;
 
 	if (node->parent == NULL)
-		return ;
+		return (node);
 	dir = (node == node->parent->child[RIGHT]);
 	if (node->parent->parent == NULL)
 	{
@@ -79,34 +79,34 @@ void	splay_tree(t_node *node)
 		rotate_tree(node->parent, dir ^ 1);
 		rotate_tree(node->parent, dir);
 	}
-	splay_tree(node);
+	return (splay_tree(node));
 }
 
-void	*clear_node(t_node *node)
+void	*clear_node(t_node **node)
 {
 	t_node	*childs[2];
 	t_node	*successor;
 
-	splay_tree(node);
-	childs[LEFT] = node->child[LEFT];
-	childs[RIGHT] = node->child[RIGHT];
+	splay_tree(*node);
+	childs[LEFT] = (*node)->child[LEFT];
+	childs[RIGHT] = (*node)->child[RIGHT];
 	successor = NULL;
 	if (childs[LEFT] != NULL)
 	{
 		childs[LEFT]->parent = NULL;
 		successor = get_rightmost(childs[LEFT]);
 		splay_tree(successor);
-		*(node->root) = successor;
+		*((*node)->root) = successor;
+		if (childs[RIGHT] != NULL)
+			successor->child[RIGHT] = childs[RIGHT];
 	}
 	if (childs[RIGHT] != NULL)
 	{
-		if (childs[LEFT] != NULL)
-			successor->child[RIGHT] = childs[RIGHT];
-		else
-			*(node->root) = childs[RIGHT];
+		*((*node)->root) = childs[RIGHT];
 		childs[RIGHT]->parent = successor;
 	}
-	free(node->saved);
-	free(node);
+	free((*node)->saved);
+	free((*node));
+	*node = NULL;
 	return (NULL);
 }
