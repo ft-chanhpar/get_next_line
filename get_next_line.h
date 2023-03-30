@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:27:50 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/30 12:59:51 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/30 15:31:04 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,18 @@ typedef enum e_direction
 	RIGHT
 }	t_direction;
 
+typedef enum e_oper
+{
+	SPLIT,
+	SKEW
+}	t_oper;
+
 /* rename variables: begin, end, que_head, que_tail? */
 
 typedef struct s_node
 {
-	struct s_node	*next;
+	struct s_node	*childs[2];
+	unsigned int	level;
 	int				fd;
 	int				is_eof;
 	char			*saved;

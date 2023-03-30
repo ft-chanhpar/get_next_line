@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:28:27 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/30 12:58:59 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/30 16:06:07 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ extern char		*ft_mempcpy(char *dst, char const *src, size_t const len);
 extern void		*clear_node(t_node **node);
 extern char		*parse_line(t_node **node);
 extern t_node	**append_data(t_node **node, char *buffer);
+t_node			*split_or_skew(t_node *node, t_oper oper);
 
 /* check size overflow? change to deque? */
 static char	*process(t_node **node, char *buffer)
@@ -51,18 +52,15 @@ static char	*gnl(t_node **node, char *buffer, int fd)
 	if (*node != NULL)
 	{
 		if ((*node)->fd == fd)
-		{
 			return (process(node, buffer));
-		}
-		else
-		{
-			return (gnl(&(*node)->next, buffer, fd));
-		}
+		return (gnl(&(*node)->childs[(*node)->fd < fd], buffer, fd));
 	}
 	*node = malloc(sizeof(t_node));
 	if (*node == NULL)
 		return (NULL);
-	(*node)->next = NULL;
+	(*node)->childs[LEFT] = NULL;
+	(*node)->childs[RIGHT] = NULL;
+	(*node)->level = 1;
 	(*node)->fd = fd;
 	(*node)->is_eof = 0;
 	(*node)->saved = NULL;
@@ -71,6 +69,7 @@ static char	*gnl(t_node **node, char *buffer, int fd)
 	(*node)->cap = 0;
 	(*node)->que_head = 0;
 	(*node)->que_tail = 0;
+	*node = split_or_skew(split_or_skew(*node, SKEW), SPLIT);
 	return (process(node, buffer));
 }
 
@@ -78,5 +77,7 @@ char	*get_next_line(int fd)
 {
 	static t_head_node	head;
 
+	if (fd < 0)
+		return (NULL);
 	return (gnl(&head.next[fd % TABLE_SIZE], head.buffer, fd));
 }

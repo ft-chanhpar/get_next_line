@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/20 22:23:34 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/30 12:58:52 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/30 16:53:34 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,24 @@ char	*ft_mempcpy(char *dst, char const *src, size_t const len)
 
 void	*clear_node(t_node **node)
 {
-	t_node	*tmp;
+	t_node	*left;
+	t_node	*right;
+	t_node	*next;
 
-	tmp = (*node)->next;
-	free((*node)->saved);
-	free(*node);
-	*node = tmp;
+	if (*node == NULL)
+		return (NULL);
+	left = (*node)->childs[LEFT];
+	right = (*node)->childs[RIGHT];
+	if (left == NULL && right == NULL)
+	{
+		free((*node)->saved);
+		free(*node);
+		*node = NULL;
+	}
+	else if (left == NULL)
+	{
+		next = get_leaf_node(right, LEFT);
+	}
 	return (NULL);
 }
 
@@ -49,6 +61,46 @@ t_node	**append_data(t_node **node, char *buffer)
 	}
 	(*node)->saved[(*node)->end++] = *buffer;
 	return (append_data(node, buffer + 1));
+}
+
+t_node	*split_or_skew(t_node *node, t_oper oper)
+{
+	t_node	*child;
+
+	if (oper == SPLIT && node->childs[RIGHT] && \
+		node->childs[RIGHT]->childs[RIGHT] && \
+		node->childs[RIGHT]->childs[RIGHT]->level == node->level)
+	{
+		child = node->childs[RIGHT];
+		node->childs[RIGHT] = child->childs[LEFT];
+		child->childs[LEFT] = node;
+		++child->level;
+	}
+	else if (oper == SKEW && \
+			node->childs[LEFT] && \
+			node->childs[LEFT]->level == node->level)
+	{
+		child = node->childs[LEFT];
+		node->childs[LEFT] = child->childs[RIGHT];
+		child->childs[RIGHT] = node;
+	}
+	else
+	{
+		return (node);
+	}
+	return (child);
+}
+
+t_node	*get_leaf_node(t_node *node, t_direction dir)
+{
+	if (node->childs[dir])
+	{
+		return (get_leaf_node(node->childs[dir], dir));
+	}
+	else
+	{
+		return (node);
+	}
 }
 
 char	*parse_line(t_node **node)
