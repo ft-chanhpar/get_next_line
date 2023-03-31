@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:28:27 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/30 16:06:07 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/03/31 15:58:54 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,28 +49,27 @@ static char	*process(t_node **node, char *buffer)
 
 static char	*gnl(t_node **node, char *buffer, int fd)
 {
-	if (*node != NULL)
-	{
-		if ((*node)->fd == fd)
-			return (process(node, buffer));
-		return (gnl(&(*node)->childs[(*node)->fd < fd], buffer, fd));
-	}
-	*node = malloc(sizeof(t_node));
 	if (*node == NULL)
-		return (NULL);
-	(*node)->childs[LEFT] = NULL;
-	(*node)->childs[RIGHT] = NULL;
-	(*node)->level = 1;
-	(*node)->fd = fd;
-	(*node)->is_eof = 0;
-	(*node)->saved = NULL;
-	(*node)->begin = 0;
-	(*node)->end = 0;
-	(*node)->cap = 0;
-	(*node)->que_head = 0;
-	(*node)->que_tail = 0;
-	*node = split_or_skew(split_or_skew(*node, SKEW), SPLIT);
-	return (process(node, buffer));
+	{
+		*node = malloc(sizeof(t_node));
+		if (*node == NULL)
+			return (NULL);
+		(*node)->childs[LEFT] = NULL;
+		(*node)->childs[RIGHT] = NULL;
+		(*node)->level = 1;
+		(*node)->fd = fd;
+		(*node)->is_eof = 0;
+		(*node)->saved = NULL;
+		(*node)->begin = 0;
+		(*node)->end = 0;
+		(*node)->cap = 0;
+		(*node)->que_head = 0;
+		(*node)->que_tail = 0;
+		*node = split_or_skew(split_or_skew(*node, SKEW), SPLIT);
+	}
+	if ((*node)->fd == fd)
+		return (process(node, buffer));
+	return (gnl(&(*node)->childs[(*node)->fd < fd], buffer, fd));
 }
 
 char	*get_next_line(int fd)
