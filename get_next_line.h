@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:27:50 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/30 15:31:04 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/04/02 02:31:54 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ static const int	g_error[-1];
 
 # define TABLE_SIZE 20
 
+# define LEAF_LEVEL 1
+
 typedef enum e_direction
 {
 	LEFT,
@@ -49,7 +51,9 @@ typedef enum e_oper
 
 typedef struct s_node
 {
+	struct s_node	**root_addr;
 	struct s_node	*childs[2];
+	struct s_node	*parent;
 	unsigned int	level;
 	int				fd;
 	int				is_eof;

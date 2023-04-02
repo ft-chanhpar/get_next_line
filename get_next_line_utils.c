@@ -6,12 +6,104 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/20 22:23:34 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/03/30 16:53:34 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/04/02 03:14:30 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "get_next_line.h"
+
+t_node		*skew_or_split(t_node *const node, t_oper const oper);
+void		*clear_node(t_node *node, t_node *parent);
+char		*ft_mempcpy(char *dst, char const *src, size_t const len);
+
+static t_node	*get_leaf_addr(t_node *const node, t_direction const dir)
+{
+	if (node->childs[dir] != NULL)
+	{
+		return (get_leaf_addr(node->childs[dir], dir));
+	}
+	else
+	{
+		return (node);
+	}
+}
+
+t_node	*skew_or_split(t_node *const node, t_oper const oper)
+{
+	t_direction const	dir = (oper == SPLIT);
+	t_node *const		child = node->childs[dir];
+	int const			flag = (oper == SPLIT) \
+								&& child != NULL \
+								&& child->childs[RIGHT] != NULL \
+								&& child->childs[RIGHT]->level == node->level;
+
+	if (flag)
+		++child->level;
+	if (flag || (oper == SKEW && child != NULL && child->level == node->level))
+	{
+		node->childs[dir] = child->childs[dir ^ 1];
+		if (child->childs[dir ^ 1])
+			child->childs[dir ^ 1]->parent = node;
+		child->childs[dir ^ 1] = node;
+		child->parent = node->parent;
+		node->parent = child;
+	}
+	if (oper == SKEW)
+		return (skew_or_split(child, SPLIT));
+	if (child->parent != NULL)
+		return (skew_or_split(child->parent, SKEW));
+	return (child);
+}
+
+/* next = get_leaf_addr(&(*node)->childs[(*node)->childs[LEFT] == NULL], \
+ * LEFT); */
+
+void	*clear_node(t_node *node, t_node *parent)
+{
+	t_node	*tmp;
+	t_node	*next;
+	t_node	*next_parent;
+
+	if (node->childs[LEFT] == NULL) // leaf case
+	{
+		if (parent == NULL)
+			*(node->root_addr) = node->childs[RIGHT];
+		else
+			parent->childs[node == parent->childs[RIGHT]] = node->childs[RIGHT];
+		if (node->childs[RIGHT] != NULL)
+			node->childs[RIGHT]->parent = parent;
+		free(node->saved);
+		free(node);
+		/* decrease_level(); */
+		return (NULL);
+	}
+	next = get_leaf_addr(node->childs[LEFT], RIGHT);
+	next_parent = next->parent;
+	if (next_parent == node)
+	{
+	}
+	else
+	{
+	}
+
+	next_parent->childs[RIGHT] = NULL;
+	tmp = node;
+
+	if (parent == NULL)
+		*(node->root_addr) = next;
+	else
+	{
+		parent->childs[node == parent->childs[RIGHT]] = next;
+		next->parent = parent;
+	}
+
+
+	free(tmp->saved);
+	free(tmp);
+	/* decrease_level(); */
+	return (NULL);
+}
 
 char	*ft_mempcpy(char *dst, char const *src, size_t const len)
 {
@@ -24,105 +116,4 @@ char	*ft_mempcpy(char *dst, char const *src, size_t const len)
 	{
 		return (dst);
 	}
-}
-
-void	*clear_node(t_node **node)
-{
-	t_node	*left;
-	t_node	*right;
-	t_node	*next;
-
-	if (*node == NULL)
-		return (NULL);
-	left = (*node)->childs[LEFT];
-	right = (*node)->childs[RIGHT];
-	if (left == NULL && right == NULL)
-	{
-		free((*node)->saved);
-		free(*node);
-		*node = NULL;
-	}
-	else if (left == NULL)
-	{
-		next = get_leaf_node(right, LEFT);
-	}
-	return (NULL);
-}
-
-t_node	**append_data(t_node **node, char *buffer)
-{
-	if ((*node)->read_len == 0)
-		return (node);
-	--(*node)->read_len;
-	if (*buffer == '\n')
-	{
-		(*node)->line_que[(*node)->que_tail++] = (*node)->end;
-		(*node)->que_tail %= QUE_SIZE;
-	}
-	(*node)->saved[(*node)->end++] = *buffer;
-	return (append_data(node, buffer + 1));
-}
-
-t_node	*split_or_skew(t_node *node, t_oper oper)
-{
-	t_node	*child;
-
-	if (oper == SPLIT && node->childs[RIGHT] && \
-		node->childs[RIGHT]->childs[RIGHT] && \
-		node->childs[RIGHT]->childs[RIGHT]->level == node->level)
-	{
-		child = node->childs[RIGHT];
-		node->childs[RIGHT] = child->childs[LEFT];
-		child->childs[LEFT] = node;
-		++child->level;
-	}
-	else if (oper == SKEW && \
-			node->childs[LEFT] && \
-			node->childs[LEFT]->level == node->level)
-	{
-		child = node->childs[LEFT];
-		node->childs[LEFT] = child->childs[RIGHT];
-		child->childs[RIGHT] = node;
-	}
-	else
-	{
-		return (node);
-	}
-	return (child);
-}
-
-t_node	*get_leaf_node(t_node *node, t_direction dir)
-{
-	if (node->childs[dir])
-	{
-		return (get_leaf_node(node->childs[dir], dir));
-	}
-	else
-	{
-		return (node);
-	}
-}
-
-char	*parse_line(t_node **node)
-{
-	char	*string;
-	size_t	len;
-
-	if ((*node)->is_eof)
-	{
-		len = (*node)->end - (*node)->begin;
-		if (len == 0)
-			return (clear_node(node));
-	}
-	else
-	{
-		len = (*node)->line_que[(*node)->que_head++] - (*node)->begin + 1;
-		(*node)->que_head %= QUE_SIZE;
-	}
-	string = malloc(sizeof(char) * (len + 1));
-	if (string == NULL)
-		return (clear_node(node));
-	*ft_mempcpy(string, (*node)->saved + (*node)->begin, len) = '\0';
-	(*node)->begin += len;
-	return (string);
 }
