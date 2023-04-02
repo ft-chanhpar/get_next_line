@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:27:50 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/04/02 02:31:54 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/04/02 23:24:56 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,6 @@
 
 static const int	g_error[-1];
 
-# endif
-
-# if BUFFER_SIZE > 1
-#  define QUE_SIZE BUFFER_SIZE
-# else
-#  define QUE_SIZE 2
 # endif
 
 # define TABLE_SIZE 20
@@ -61,7 +55,7 @@ typedef struct s_node
 	size_t			begin;
 	size_t			end;
 	size_t			cap;
-	size_t			line_que[QUE_SIZE];
+	size_t			line_que[BUFFER_SIZE + 1];
 	size_t			que_head;
 	size_t			que_tail;
 	ssize_t			read_len;
