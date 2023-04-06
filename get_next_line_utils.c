@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/20 22:23:34 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/04/02 03:14:30 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/04/06 14:54:33 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,31 +78,43 @@ void	*clear_node(t_node *node, t_node *parent)
 		/* decrease_level(); */
 		return (NULL);
 	}
+	/* next->childs[RIGHT] == NULL, next->childs[LEFT] == NULL */
 	next = get_leaf_addr(node->childs[LEFT], RIGHT);
 	next_parent = next->parent;
 	if (next_parent == node)
 	{
-	}
-	else
-	{
-	}
-
-	next_parent->childs[RIGHT] = NULL;
-	tmp = node;
-
-	if (parent == NULL)
-		*(node->root_addr) = next;
-	else
-	{
-		parent->childs[node == parent->childs[RIGHT]] = next;
+		if (parent == NULL)
+			*(node->root_addr) = next;
+		else
+			parent->childs[node == parent->childs[RIGHT]] = next;
 		next->parent = parent;
+		next->childs[RIGHT] = node->childs[RIGHT];
+		if (node->childs[RIGHT] != NULL)
+			node->childs[RIGHT]->parent = next;
+		free(node->saved);
+		free(node);
+		/* decrease_level(); */
+		return (NULL);
 	}
-
-
-	free(tmp->saved);
-	free(tmp);
-	/* decrease_level(); */
-	return (NULL);
+	else
+	{
+		if (parent == NULL)
+			*(node->root_addr) = next;
+		else
+			parent->childs[node == parent->childs[RIGHT]] = next;
+		next->parent = parent;
+		next->childs[RIGHT] = node->childs[RIGHT];
+		if (node->childs[RIGHT] != NULL)
+			node->childs[RIGHT]->parent = next;
+		next->childs[LEFT] = node->childs[LEFT];
+		if (node->childs[LEFT] != NULL)
+			node->childs[LEFT]->parent = next;
+		next_parent->childs[RIGHT] = NULL;
+		free(node->saved);
+		free(node);
+		/* decrease_level(); */
+		return (NULL);
+	}
 }
 
 char	*ft_mempcpy(char *dst, char const *src, size_t const len)
