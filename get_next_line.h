@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:27:50 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/04/02 23:24:56 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/04/06 20:32:24 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 #  define BUFFER_SIZE 1024
 # endif
 
-# if BUFFER_SIZE == 0
+# if BUFFER_SIZE <= 0
 
 static const int	g_error[-1];
 
