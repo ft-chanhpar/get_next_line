@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:28:27 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/04/14 17:00:50 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/04/16 21:35:21 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ static char	*process(t_gnl_node **node, char *buffer)
 	return (process(append_data(node, buffer), buffer));
 }
 
-static char	*gnl(t_gnl_node **node, char *buffer, int const fd)
+static char	*gnl(t_gnl_node **node, char *buffer, int fd)
 {
 	if (*node == NULL)
 	{
@@ -101,7 +101,7 @@ static char	*gnl(t_gnl_node **node, char *buffer, int const fd)
 	return (gnl(&(*node)->next, buffer, fd));
 }
 
-char	*get_next_line(int const fd)
+char	*get_next_line(int fd)
 {
 	static t_head_node	head;
 
