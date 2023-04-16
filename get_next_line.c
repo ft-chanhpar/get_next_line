@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:28:27 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/04/16 21:35:21 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/04/16 22:17:21 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,13 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-extern char		*ft_mempcpy(char *dst, char const *src, size_t const len);
-extern void		*clear_node(t_gnl_node **node);
+extern char	*ft_mempcpy(char *const dst, \
+						char const *const src, \
+						size_t const len);
 
-static t_gnl_node	**append_data(t_gnl_node **node, char *buffer)
+extern void	*clear_node(t_gnl_node **const node);
+
+static t_gnl_node	**append_data(t_gnl_node **const node, char *const buffer)
 {
 	if ((*node)->read_len == 0)
 		return (node);
@@ -31,7 +34,7 @@ static t_gnl_node	**append_data(t_gnl_node **node, char *buffer)
 	return (append_data(node, buffer + 1));
 }
 
-static char	*parse_line(t_gnl_node **node)
+static char	*parse_line(t_gnl_node **const node)
 {
 	char	*string;
 	size_t	len;
@@ -53,7 +56,7 @@ static char	*parse_line(t_gnl_node **node)
 	return (string);
 }
 
-static char	*process(t_gnl_node **node, char *buffer)
+static char	*process(t_gnl_node **const node, char *const buffer)
 {
 	char	*copy;
 
@@ -79,7 +82,7 @@ static char	*process(t_gnl_node **node, char *buffer)
 	return (process(append_data(node, buffer), buffer));
 }
 
-static char	*gnl(t_gnl_node **node, char *buffer, int fd)
+static char	*gnl(t_gnl_node **const node, char *const buffer, int const fd)
 {
 	if (*node == NULL)
 	{

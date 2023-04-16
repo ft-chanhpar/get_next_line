@@ -6,14 +6,14 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/20 22:23:34 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/04/14 16:33:02 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/04/16 22:17:18 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include "get_next_line.h"
 
-char	*ft_mempcpy(char *dst, char const *src, size_t const len)
+char	*ft_mempcpy(char *const dst, char const *const src, size_t const len)
 {
 	if (len == 0)
 		return (dst);
@@ -21,7 +21,7 @@ char	*ft_mempcpy(char *dst, char const *src, size_t const len)
 	return (ft_mempcpy(dst + 1, src + 1, len - 1));
 }
 
-void	*clear_node(t_gnl_node **node)
+void	*clear_node(t_gnl_node **const node)
 {
 	t_gnl_node	*tmp;
 
