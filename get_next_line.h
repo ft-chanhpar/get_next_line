@@ -6,7 +6,7 @@
 /*   By: chanhpar <chanhpar@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/19 14:27:50 by chanhpar          #+#    #+#             */
-/*   Updated: 2023/04/14 17:00:53 by chanhpar         ###   ########.fr       */
+/*   Updated: 2023/07/31 12:16:37 by chanhpar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,7 @@
 # endif
 
 # if BUFFER_SIZE <= 0
-
-static const int	g_error[-1];
-
+#  error "non-positive BUFFER_SIZE"
 # endif
 
 # define TABLE_SIZE 20
