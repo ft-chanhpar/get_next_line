@@ -39,16 +39,14 @@ static void	rotate_tree(t_node *node, t_direction const dir)
 		successor->parent = node->parent;
 		successor->child[dir] = node;
 	}
-	if (node->parent == NULL)
-		*(node->root) = successor;
-	else
+	if (node->parent != NULL)
 		node->parent->child[node == node->parent->child[RIGHT]] = successor;
 	node->parent = successor;
 }
 
 static t_node	*get_rightmost(t_node *node)
 {
-	if (node->child[RIGHT])
+	if (node->child[RIGHT] != NULL)
 	{
 		return (get_rightmost(node->child[RIGHT]));
 	}
@@ -58,12 +56,12 @@ static t_node	*get_rightmost(t_node *node)
 	}
 }
 
-t_node	**splay_tree(t_node *node)
+t_node	*splay_tree(t_node *node)
 {
 	t_direction	dir;
 
 	if (node->parent == NULL)
-		return (node->root);
+		return (node);
 	dir = (node == node->parent->child[RIGHT]);
 	if (node->parent->parent == NULL)
 	{
@@ -84,29 +82,27 @@ t_node	**splay_tree(t_node *node)
 
 void	*clear_node(t_node **node)
 {
+	t_node	*root;
 	t_node	*childs[2];
 	t_node	*successor;
 
-	splay_tree(*node);
-	childs[LEFT] = (*node)->child[LEFT];
-	childs[RIGHT] = (*node)->child[RIGHT];
+	root = splay_tree(*node);
+	childs[LEFT] = root->child[LEFT];
+	childs[RIGHT] = root->child[RIGHT];
 	successor = NULL;
 	if (childs[LEFT] != NULL)
 	{
 		childs[LEFT]->parent = NULL;
 		successor = get_rightmost(childs[LEFT]);
 		splay_tree(successor);
-		*((*node)->root) = successor;
 		if (childs[RIGHT] != NULL)
 			successor->child[RIGHT] = childs[RIGHT];
 	}
 	if (childs[RIGHT] != NULL)
 	{
-		*((*node)->root) = childs[RIGHT];
 		childs[RIGHT]->parent = successor;
 	}
-	free((*node)->saved);
-	free((*node));
-	*node = NULL;
+	free(root->saved);
+	free(root);
 	return (NULL);
 }

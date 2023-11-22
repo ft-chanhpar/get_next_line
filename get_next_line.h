@@ -19,9 +19,9 @@
 #  define BUFFER_SIZE 1024
 # endif
 
-# if BUFFER_SIZE == 0
+# if BUFFER_SIZE <= 0
 
-static const int	g_error[-1];
+#  error "invalid BUFFER_SIZE"
 
 # endif
 
@@ -43,7 +43,6 @@ typedef enum e_direction
 
 typedef struct s_node
 {
-	struct s_node	**root;
 	struct s_node	*parent;
 	struct s_node	*child[2];
 	int				fd;

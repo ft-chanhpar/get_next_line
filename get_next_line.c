@@ -16,7 +16,7 @@
 
 extern char		*ft_mempcpy(char *dst, char const *src, size_t const len);
 extern void		*clear_node(t_node **node);
-extern t_node	**splay_tree(t_node *node);
+extern t_node	*splay_tree(t_node *node);
 
 static t_node	**append_data(t_node **node, char *buffer)
 {
@@ -92,10 +92,6 @@ static char	*gnl(t_node **node, t_node *parent, char *buffer, int const fd)
 		*node = malloc(sizeof(t_node));
 		if (*node == NULL)
 			return (NULL);
-		if (parent)
-			(*node)->root = parent->root;
-		else
-			(*node)->root = node;
 		(*node)->parent = parent;
 		(*node)->child[LEFT] = NULL;
 		(*node)->child[RIGHT] = NULL;
@@ -107,9 +103,10 @@ static char	*gnl(t_node **node, t_node *parent, char *buffer, int const fd)
 		(*node)->cap = 0;
 		(*node)->que_head = 0;
 		(*node)->que_tail = 0;
-		node = splay_tree(*node);
+		splay_tree(*node);
+		return (get_next_line(fd));
 	}
-	if (*node == NULL || (*node)->fd == fd)
+	if ((*node)->fd == fd)
 		return (process(node, buffer));
 	return (gnl(&(*node)->child[(*node)->fd < fd], *node, buffer, fd));
 }
