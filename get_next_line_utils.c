@@ -90,6 +90,13 @@ void	*clear_node(t_node **node)
 	childs[LEFT] = root->child[LEFT];
 	childs[RIGHT] = root->child[RIGHT];
 	successor = NULL;
+	if (childs[LEFT] == NULL && childs[RIGHT] == NULL)
+	{
+		free(root->saved);
+		free(root);
+		*node = NULL;
+		return NULL;
+	}
 	if (childs[LEFT] != NULL)
 	{
 		childs[LEFT]->parent = NULL;
