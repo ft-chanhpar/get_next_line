@@ -95,7 +95,7 @@ void	*clear_node(t_node **node)
 		free(root->saved);
 		free(root);
 		*node = NULL;
-		return NULL;
+		return (NULL);
 	}
 	if (childs[LEFT] != NULL)
 	{
