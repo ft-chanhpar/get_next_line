@@ -45,7 +45,7 @@ unsigned char get_random_char(void)
 	return (random_pool[index++]);
 }
 
-void fil_random_char(unsigned char * buff, size_t size)
+void fill_random_char(unsigned char * buff, size_t size)
 {
 	size_t count;
 
@@ -80,15 +80,18 @@ void	generate_infile(void)
 		while (size > 0)
 		{
 			len = size < CHUNK_SIZE ? size : CHUNK_SIZE;
-			fil_random_char(c, len);
-			write(fd2, c, len);
+			fill_random_char(c, len);
+			if (write(fd2, c, len) < 0)
+			{
+				perror(STRINGFY(__LINE__));
+				exit(1);
+			}
 			size -= len;
 		}
 		close(fd2);
 	}
 	fprintf(stderr, "=====test files generated=====\n");
-	fprintf(stderr, "=====press ENTER to continue=====\n");
-	system("cat | echo");
+	sleep(1);
 }
 
 void	generate_outfile(void)
@@ -130,6 +133,8 @@ void	generate_outfile(void)
 		line = get_next_line(in_fds[file_index]);
 		if (line == NULL)
 		{
+			close(in_fds[file_index]);
+			close(out_fds[file_index]);
 			in_fds[file_index] = -1;
 			++count;
 			continue;
@@ -141,16 +146,17 @@ void	generate_outfile(void)
 		}
 		free(line);
 	}
-
 	fprintf(stderr, "=====outfiles created=====\n");
 }
 
+/*
 void	remove_file(void)
 {
 	system("rm -rf ./infiles");
 	system("rm -rf ./outfiles");
 	fprintf(stderr, "=====test files removed=====\n");
 }
+*/
 
 int	main(void)
 {
@@ -159,6 +165,5 @@ int	main(void)
 	generate_infile();
 	generate_outfile();
 	close(random_fd);
-	system("leaks $PPID");
 	return (0);
 }
