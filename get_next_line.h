@@ -39,8 +39,6 @@ typedef enum e_direction
 	RIGHT
 }	t_direction;
 
-/* rename variables: begin, end, que_head, que_tail? */
-
 typedef struct s_node
 {
 	struct s_node	*parent;

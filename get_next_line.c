@@ -21,7 +21,9 @@ extern t_node	*splay_tree(t_node *node, t_node **root_address);
 static t_node	**append_data(t_node **node, char *buffer)
 {
 	if ((*node)->read_len == 0)
+	{
 		return (node);
+	}
 	--(*node)->read_len;
 	if (*buffer == '\n')
 	{
@@ -41,7 +43,9 @@ static char	*parse_line(t_node **node)
 	{
 		len = (*node)->end - (*node)->begin;
 		if (len == 0)
+		{
 			return (clear_node(node));
+		}
 	}
 	else
 	{
@@ -50,7 +54,9 @@ static char	*parse_line(t_node **node)
 	}
 	string = malloc(sizeof(char) * (len + 1));
 	if (string == NULL)
+	{
 		return (clear_node(node));
+	}
 	*ft_mempcpy(string, (*node)->saved + (*node)->begin, len) = '\0';
 	(*node)->begin += len;
 	return (string);
