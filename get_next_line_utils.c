@@ -56,12 +56,15 @@ static t_node	*get_rightmost(t_node *node)
 	}
 }
 
-t_node	*splay_tree(t_node *node)
+t_node	*splay_tree(t_node *node, t_node **root_address)
 {
 	t_direction	dir;
 
 	if (node->parent == NULL)
+	{
+		*root_address = node;
 		return (node);
+	}
 	dir = (node == node->parent->child[RIGHT]);
 	if (node->parent->parent == NULL)
 	{
@@ -77,39 +80,34 @@ t_node	*splay_tree(t_node *node)
 		rotate_tree(node->parent, dir ^ 1);
 		rotate_tree(node->parent, dir);
 	}
-	return (splay_tree(node));
+	return (splay_tree(node, root_address));
 }
 
 void	*clear_node(t_node **node)
 {
-	t_node	*root;
+	t_node	**root_address;
 	t_node	*childs[2];
 	t_node	*successor;
+	t_node	*to_delete;
 
-	root = splay_tree(*node);
-	childs[LEFT] = root->child[LEFT];
-	childs[RIGHT] = root->child[RIGHT];
+	root_address = (*node)->root_address;
+	to_delete = splay_tree(*node, root_address);
+	childs[LEFT] = (*root_address)->child[LEFT];
+	childs[RIGHT] = (*root_address)->child[RIGHT];
 	successor = NULL;
-	if (childs[LEFT] == NULL && childs[RIGHT] == NULL)
-	{
-		free(root->saved);
-		free(root);
-		*node = NULL;
-		return (NULL);
-	}
 	if (childs[LEFT] != NULL)
 	{
 		childs[LEFT]->parent = NULL;
 		successor = get_rightmost(childs[LEFT]);
-		splay_tree(successor);
-		if (childs[RIGHT] != NULL)
-			successor->child[RIGHT] = childs[RIGHT];
+		splay_tree(successor, root_address);
+		successor->child[RIGHT] = childs[RIGHT];
 	}
 	if (childs[RIGHT] != NULL)
-	{
 		childs[RIGHT]->parent = successor;
-	}
-	free(root->saved);
-	free(root);
+	free(to_delete->saved);
+	free(to_delete);
+	*root_address = successor;
+	if (*root_address == NULL)
+		*root_address = childs[RIGHT];
 	return (NULL);
 }

@@ -16,7 +16,7 @@
 
 extern char		*ft_mempcpy(char *dst, char const *src, size_t const len);
 extern void		*clear_node(t_node **node);
-extern t_node	*splay_tree(t_node *node);
+extern t_node	*splay_tree(t_node *node, t_node **root_address);
 
 static t_node	**append_data(t_node **node, char *buffer)
 {
@@ -56,7 +56,6 @@ static char	*parse_line(t_node **node)
 	return (string);
 }
 
-/* check size overflow? change to deque? */
 static char	*process(t_node **node, char *buffer)
 {
 	char	*copy;
@@ -85,7 +84,7 @@ static char	*process(t_node **node, char *buffer)
 	return (process(append_data(node, buffer), buffer));
 }
 
-static char	*gnl(t_node **node, t_node *parent, char *buffer, int const fd)
+static char	*gnl(t_node **node, t_node *parent, t_head_node *head, int const fd)
 {
 	if (*node == NULL)
 	{
@@ -93,6 +92,7 @@ static char	*gnl(t_node **node, t_node *parent, char *buffer, int const fd)
 		if (*node == NULL)
 			return (NULL);
 		(*node)->parent = parent;
+		(*node)->root_address = &head->next[fd % TABLE_SIZE];
 		(*node)->child[LEFT] = NULL;
 		(*node)->child[RIGHT] = NULL;
 		(*node)->fd = fd;
@@ -103,12 +103,12 @@ static char	*gnl(t_node **node, t_node *parent, char *buffer, int const fd)
 		(*node)->cap = 0;
 		(*node)->que_head = 0;
 		(*node)->que_tail = 0;
-		splay_tree(*node);
+		splay_tree(*node, (*node)->root_address);
 		return (get_next_line(fd));
 	}
 	if ((*node)->fd == fd)
-		return (process(node, buffer));
-	return (gnl(&(*node)->child[(*node)->fd < fd], *node, buffer, fd));
+		return (process(node, head->buffer));
+	return (gnl(&(*node)->child[(*node)->fd < fd], *node, head, fd));
 }
 
 char	*get_next_line(int fd)
@@ -117,5 +117,5 @@ char	*get_next_line(int fd)
 
 	if (fd < 0)
 		return (NULL);
-	return (gnl(&head.next[fd % TABLE_SIZE], NULL, head.buffer, fd));
+	return (gnl(&head.next[fd % TABLE_SIZE], NULL, &head, fd));
 }

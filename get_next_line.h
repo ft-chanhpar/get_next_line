@@ -45,6 +45,7 @@ typedef struct s_node
 {
 	struct s_node	*parent;
 	struct s_node	*child[2];
+	struct s_node	**root_address;
 	int				fd;
 	int				is_eof;
 	char			*saved;
