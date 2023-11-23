@@ -105,13 +105,13 @@ void	*clear_node(t_node **node)
 		successor = get_rightmost(childs[LEFT]);
 		splay_tree(successor, root_address);
 		successor->child[RIGHT] = childs[RIGHT];
+		*root_address = successor;
 	}
+	else
+		*root_address = childs[RIGHT];
 	if (childs[RIGHT] != NULL)
 		childs[RIGHT]->parent = successor;
 	free(to_delete->saved);
 	free(to_delete);
-	*root_address = successor;
-	if (*root_address == NULL)
-		*root_address = childs[RIGHT];
 	return (NULL);
 }

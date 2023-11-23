@@ -110,7 +110,7 @@ static char	*gnl(t_node **node, t_node *parent, t_head_node *head, int const fd)
 		(*node)->que_head = 0;
 		(*node)->que_tail = 0;
 		splay_tree(*node, (*node)->root_address);
-		return (get_next_line(fd));
+		return (process(&head->next[fd % TABLE_SIZE], head->buffer));
 	}
 	if ((*node)->fd == fd)
 		return (process(node, head->buffer));
