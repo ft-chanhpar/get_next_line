@@ -39,27 +39,27 @@ typedef enum e_direction
 	RIGHT
 }	t_direction;
 
-typedef struct s_node
+typedef struct s_gnl_node
 {
-	struct s_node	*parent;
-	struct s_node	*child[2];
-	struct s_node	**root_address;
-	int				fd;
-	int				is_eof;
-	char			*saved;
-	size_t			begin;
-	size_t			end;
-	size_t			cap;
-	size_t			line_que[QUE_SIZE];
-	size_t			que_head;
-	size_t			que_tail;
-	ssize_t			read_len;
-}	t_node;
+	struct s_gnl_node	*parent;
+	struct s_gnl_node	*child[2];
+	struct s_gnl_node	**root_address;
+	int					fd;
+	int					is_eof;
+	char				*saved;
+	size_t				begin;
+	size_t				end;
+	size_t				cap;
+	size_t				line_que[QUE_SIZE];
+	size_t				que_head;
+	size_t				que_tail;
+	ssize_t				read_len;
+}	t_gnl_node;
 
 typedef struct s_head_node
 {
-	t_node	*next[TABLE_SIZE];
-	char	buffer[BUFFER_SIZE];
+	t_gnl_node	*next[TABLE_SIZE];
+	char		buffer[BUFFER_SIZE];
 }	t_head_node;
 
 char	*get_next_line(int fd);

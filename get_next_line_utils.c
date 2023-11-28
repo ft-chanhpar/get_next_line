@@ -13,7 +13,11 @@
 #include <stdlib.h>
 #include "get_next_line.h"
 
-char	*ft_mempcpy(char *dst, char const *src, size_t const len)
+char	*ft_mempcpy(
+		char *dst,
+		char const *src,
+		size_t const len
+		)
 {
 	if (len != 0)
 	{
@@ -26,9 +30,12 @@ char	*ft_mempcpy(char *dst, char const *src, size_t const len)
 	}
 }
 
-static void	rotate_tree(t_node *node, t_direction const dir)
+static void	rotate_tree(
+		t_gnl_node *node,
+		t_direction const dir
+		)
 {
-	t_node	*successor;
+	t_gnl_node	*successor;
 
 	successor = node->child[dir ^ 1];
 	if (successor != NULL)
@@ -48,7 +55,9 @@ static void	rotate_tree(t_node *node, t_direction const dir)
 	node->parent = successor;
 }
 
-static t_node	*get_rightmost(t_node *node)
+static t_gnl_node	*get_rightmost(
+		t_gnl_node *node
+		)
 {
 	if (node->child[RIGHT] != NULL)
 	{
@@ -60,7 +69,10 @@ static t_node	*get_rightmost(t_node *node)
 	}
 }
 
-t_node	*splay_tree(t_node *node, t_node **root_address)
+t_gnl_node	*splay_tree(
+		t_gnl_node *node,
+		t_gnl_node **root_address
+		)
 {
 	t_direction	dir;
 
@@ -87,12 +99,14 @@ t_node	*splay_tree(t_node *node, t_node **root_address)
 	return (splay_tree(node, root_address));
 }
 
-void	*clear_node(t_node **node)
+void	*clear_node(
+		t_gnl_node **node
+		)
 {
-	t_node	**root_address;
-	t_node	*childs[2];
-	t_node	*successor;
-	t_node	*to_delete;
+	t_gnl_node	**root_address;
+	t_gnl_node	*childs[2];
+	t_gnl_node	*successor;
+	t_gnl_node	*to_delete;
 
 	root_address = (*node)->root_address;
 	to_delete = splay_tree(*node, root_address);

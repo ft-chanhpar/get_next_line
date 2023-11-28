@@ -14,11 +14,23 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-extern char		*ft_mempcpy(char *dst, char const *src, size_t const len);
-extern void		*clear_node(t_node **node);
-extern t_node	*splay_tree(t_node *node, t_node **root_address);
+extern char			*ft_mempcpy(
+						char *dst,
+						char const *src,
+						size_t const len
+						);
+extern void			*clear_node(
+						t_gnl_node **node
+						);
+extern t_gnl_node	*splay_tree(
+						t_gnl_node *node,
+						t_gnl_node **root_address
+						);
 
-static t_node	**append_data(t_node **node, char *buffer)
+static t_gnl_node	**append_data(
+		t_gnl_node **node,
+		char *buffer
+		)
 {
 	if ((*node)->read_len == 0)
 	{
@@ -34,7 +46,9 @@ static t_node	**append_data(t_node **node, char *buffer)
 	return (append_data(node, buffer + 1));
 }
 
-static char	*parse_line(t_node **node)
+static char	*parse_line(
+		t_gnl_node **node
+		)
 {
 	char	*string;
 	size_t	len;
@@ -62,7 +76,10 @@ static char	*parse_line(t_node **node)
 	return (string);
 }
 
-static char	*process(t_node **node, char *buffer)
+static char	*process(
+		t_gnl_node **node,
+		char *buffer
+		)
 {
 	char	*copy;
 
@@ -90,11 +107,16 @@ static char	*process(t_node **node, char *buffer)
 	return (process(append_data(node, buffer), buffer));
 }
 
-static char	*gnl(t_node **node, t_node *parent, t_head_node *head, int const fd)
+static char	*gnl(
+		t_gnl_node **node,
+		t_gnl_node *parent,
+		t_head_node *head,
+		int const fd
+		)
 {
 	if (*node == NULL)
 	{
-		*node = malloc(sizeof(t_node));
+		*node = malloc(sizeof(t_gnl_node));
 		if (*node == NULL)
 			return (NULL);
 		(*node)->parent = parent;
