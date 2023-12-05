@@ -40,7 +40,7 @@ static t_gnl_node	**append_data(
 	if (*buffer == '\n')
 	{
 		(*node)->line_que[(*node)->que_tail++] = (*node)->end;
-		(*node)->que_tail %= QUE_SIZE;
+		(*node)->que_tail %= BUFFER_SIZE + 1;
 	}
 	(*node)->saved[(*node)->end++] = *buffer;
 	return (append_data(node, buffer + 1));
@@ -64,7 +64,7 @@ static char	*parse_line(
 	else
 	{
 		len = (*node)->line_que[(*node)->que_head++] - (*node)->begin + 1;
-		(*node)->que_head %= QUE_SIZE;
+		(*node)->que_head %= BUFFER_SIZE + 1;
 	}
 	string = malloc(sizeof(char) * (len + 1));
 	if (string == NULL)

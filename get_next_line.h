@@ -25,12 +25,6 @@
 
 # endif
 
-# if BUFFER_SIZE > 1
-#  define QUE_SIZE BUFFER_SIZE
-# else
-#  define QUE_SIZE 2
-# endif
-
 # define TABLE_SIZE 20
 
 typedef enum e_direction
@@ -50,7 +44,7 @@ typedef struct s_gnl_node
 	size_t				begin;
 	size_t				end;
 	size_t				cap;
-	size_t				line_que[QUE_SIZE];
+	size_t				line_que[BUFFER_SIZE + 1];
 	size_t				que_head;
 	size_t				que_tail;
 	ssize_t				read_len;
