@@ -135,7 +135,9 @@ static char	*gnl(
 		return (process(&head->next[fd % TABLE_SIZE], head->buffer));
 	}
 	if ((*node)->fd == fd)
-		return (process(node, head->buffer));
+		return (process(
+				splay_tree(*node, (*node)->root_address)->root_address,
+				head->buffer));
 	return (gnl(&(*node)->child[(*node)->fd < fd], *node, head, fd));
 }
 
