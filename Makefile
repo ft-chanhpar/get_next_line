@@ -25,7 +25,7 @@ endif
 
 OBJ_DIR			:= obj/
 
-SRCS			:= main.c get_next_line.c get_next_line_utils.c
+SRCS			:= test.c get_next_line.c get_next_line_utils.c
 OBJS			:= $(addprefix $(OBJ_DIR), $(SRCS:.c=.o))
 DEPS			:= $(OBJS:.o=.d)
 -include $(DEPS)
