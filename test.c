@@ -22,9 +22,17 @@
 #define STRINGFY2(X) #X
 #define STRINGFY(X) STRINGFY2(X)
 
-#define NUMBER_OF_FILES 50
-#define FILE_SIZE_LIMIT 1000000
-#define CHUNK_SIZE 10000
+#ifndef NUMBER_OF_FILES
+# define NUMBER_OF_FILES 50
+#endif
+
+#ifndef FILE_SIZE_LIMIT
+# define FILE_SIZE_LIMIT 1000000
+#endif
+
+#ifndef CHUNK_SIZE
+# define CHUNK_SIZE 10000
+#endif
 
 int random_fd;
 

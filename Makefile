@@ -36,7 +36,27 @@ INCS_DIR		:= .
 
 CPPFLAGS		:= -I$(INCS_DIR)
 
+ifdef NUMBER_OF_FILES
+	CPPFLAGS += -D NUMBER_OF_FILES=$(NUMBER_OF_FILES)
+endif
+
+ifdef FILE_SIZE_LIMIT
+	CPPFLAGS += -D FILE_SIZE_LIMIT=$(FILE_SIZE_LIMIT)
+endif
+
+ifdef CHUNK_SIZE
+	CPPFLAGS += -D CHUNK_SIZE=$(CHUNK_SIZE)
+endif
+
+ifdef BUFFER_SIZE
+	CPPFLAGS += -D BUFFER_SIZE=$(BUFFER_SIZE)
+endif
+
 NAME			:= test.out
+
+INFILES_DIR		:= infiles/
+OUTFILES_DIR	:= outfiles/
+LOG_FILE		:= result.log
 
 .PHONY: all
 all: $(NAME)
@@ -50,9 +70,14 @@ $(OBJ_DIR)%.o: %.c | $(OBJ_DIR)
 $(NAME): $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^
 
+.PHONY: test
+test: $(NAME)
+	./$(NAME)
+	diff $(INFILES_DIR) $(OUTFILES_DIR) > $(LOG_FILE) && (echo "PASS!") || (echo "FAIL!")
+
 .PHONY: clean
 clean:
-	$(RM) -r $(OBJ_DIR)
+	$(RM) -r $(OBJ_DIR) $(INFILES_DIR) $(OUTFILES_DIR) $(LOG_FILE)
 	@echo "clean done!"
 
 .PHONY: fclean
