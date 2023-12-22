@@ -73,7 +73,7 @@ $(NAME): $(OBJS)
 .PHONY: test
 test: $(NAME)
 	./$(NAME)
-	diff $(INFILES_DIR) $(OUTFILES_DIR) > $(LOG_FILE) && (echo "PASS!") || (echo "FAIL!")
+	diff -s $(INFILES_DIR) $(OUTFILES_DIR) > $(LOG_FILE) && (echo "PASS!") || (echo "FAIL!")
 
 .PHONY: clean
 clean:
